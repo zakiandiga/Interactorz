@@ -1,0 +1,152 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Launch ThirdPersonWalker (Debug)",
+			"request": "launch",
+			"program": "D:\\UnrealProject\\ThirdPersonWalker\\Binaries\\Win64\\UnrealGame-Win64-Debug.exe",
+			"preLaunchTask": "ThirdPersonWalker Win64 Debug Build",
+			"args": [
+			],
+			"cwd": "D:\\Unreal\\UE_5.0",
+			"stopAtEntry": false,
+			"console": "externalTerminal",
+			"type": "cppvsdbg",
+			"visualizerFile": "D:\\Unreal\\UE_5.0\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"sourceFileMap": {
+				"D:\build\++UE5\Sync": "D:\\Unreal\\UE_5.0"
+			}
+		},
+		{
+			"name": "Launch ThirdPersonWalker (DebugGame)",
+			"request": "launch",
+			"program": "D:\\UnrealProject\\ThirdPersonWalker\\Binaries\\Win64\\UnrealGame-Win64-DebugGame.exe",
+			"preLaunchTask": "ThirdPersonWalker Win64 DebugGame Build",
+			"args": [
+			],
+			"cwd": "D:\\Unreal\\UE_5.0",
+			"stopAtEntry": false,
+			"console": "externalTerminal",
+			"type": "cppvsdbg",
+			"visualizerFile": "D:\\Unreal\\UE_5.0\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"sourceFileMap": {
+				"D:\build\++UE5\Sync": "D:\\Unreal\\UE_5.0"
+			}
+		},
+		{
+			"name": "Launch ThirdPersonWalker (Development)",
+			"request": "launch",
+			"program": "D:\\UnrealProject\\ThirdPersonWalker\\Binaries\\Win64\\UnrealGame.exe",
+			"preLaunchTask": "ThirdPersonWalker Win64 Development Build",
+			"args": [
+			],
+			"cwd": "D:\\Unreal\\UE_5.0",
+			"stopAtEntry": false,
+			"console": "externalTerminal",
+			"type": "cppvsdbg",
+			"visualizerFile": "D:\\Unreal\\UE_5.0\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"sourceFileMap": {
+				"D:\build\++UE5\Sync": "D:\\Unreal\\UE_5.0"
+			}
+		},
+		{
+			"name": "Launch ThirdPersonWalker (Test)",
+			"request": "launch",
+			"program": "D:\\UnrealProject\\ThirdPersonWalker\\Binaries\\Win64\\UnrealGame-Win64-Test.exe",
+			"preLaunchTask": "ThirdPersonWalker Win64 Test Build",
+			"args": [
+			],
+			"cwd": "D:\\Unreal\\UE_5.0",
+			"stopAtEntry": false,
+			"console": "externalTerminal",
+			"type": "cppvsdbg",
+			"visualizerFile": "D:\\Unreal\\UE_5.0\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"sourceFileMap": {
+				"D:\build\++UE5\Sync": "D:\\Unreal\\UE_5.0"
+			}
+		},
+		{
+			"name": "Launch ThirdPersonWalker (Shipping)",
+			"request": "launch",
+			"program": "D:\\UnrealProject\\ThirdPersonWalker\\Binaries\\Win64\\UnrealGame-Win64-Shipping.exe",
+			"preLaunchTask": "ThirdPersonWalker Win64 Shipping Build",
+			"args": [
+			],
+			"cwd": "D:\\Unreal\\UE_5.0",
+			"stopAtEntry": false,
+			"console": "externalTerminal",
+			"type": "cppvsdbg",
+			"visualizerFile": "D:\\Unreal\\UE_5.0\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"sourceFileMap": {
+				"D:\build\++UE5\Sync": "D:\\Unreal\\UE_5.0"
+			}
+		},
+		{
+			"name": "Launch ThirdPersonWalkerEditor (Debug)",
+			"request": "launch",
+			"program": "D:\\Unreal\\UE_5.0\\Engine\\Binaries\\Win64\\UnrealEditor-Win64-Debug.exe",
+			"preLaunchTask": "ThirdPersonWalkerEditor Win64 Debug Build",
+			"args": [
+				"D:\\UnrealProject\\ThirdPersonWalker\\ThirdPersonWalker.uproject"
+			],
+			"cwd": "D:\\Unreal\\UE_5.0",
+			"stopAtEntry": false,
+			"console": "externalTerminal",
+			"type": "cppvsdbg",
+			"visualizerFile": "D:\\Unreal\\UE_5.0\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"sourceFileMap": {
+				"D:\build\++UE5\Sync": "D:\\Unreal\\UE_5.0"
+			}
+		},
+		{
+			"name": "Launch ThirdPersonWalkerEditor (DebugGame)",
+			"request": "launch",
+			"program": "D:\\Unreal\\UE_5.0\\Engine\\Binaries\\Win64\\UnrealEditor-Win64-DebugGame.exe",
+			"preLaunchTask": "ThirdPersonWalkerEditor Win64 DebugGame Build",
+			"args": [
+				"D:\\UnrealProject\\ThirdPersonWalker\\ThirdPersonWalker.uproject"
+			],
+			"cwd": "D:\\Unreal\\UE_5.0",
+			"stopAtEntry": false,
+			"console": "externalTerminal",
+			"type": "cppvsdbg",
+			"visualizerFile": "D:\\Unreal\\UE_5.0\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"sourceFileMap": {
+				"D:\build\++UE5\Sync": "D:\\Unreal\\UE_5.0"
+			}
+		},
+		{
+			"name": "Launch ThirdPersonWalkerEditor (Development)",
+			"request": "launch",
+			"program": "D:\\Unreal\\UE_5.0\\Engine\\Binaries\\Win64\\UnrealEditor.exe",
+			"preLaunchTask": "ThirdPersonWalkerEditor Win64 Development Build",
+			"args": [
+				"D:\\UnrealProject\\ThirdPersonWalker\\ThirdPersonWalker.uproject"
+			],
+			"cwd": "D:\\Unreal\\UE_5.0",
+			"stopAtEntry": false,
+			"console": "externalTerminal",
+			"type": "cppvsdbg",
+			"visualizerFile": "D:\\Unreal\\UE_5.0\\Engine\\Extras\\VisualStudioDebugging\\Unreal.natvis",
+			"sourceFileMap": {
+				"D:\build\++UE5\Sync": "D:\\Unreal\\UE_5.0"
+			}
+		},
+		{
+			"name": "Generate Project Files",
+			"type": "coreclr",
+			"request": "launch",
+			"program": "D:\\Unreal\\UE_5.0\\Engine\\Binaries\\DotNET\\UnrealBuildTool\\UnrealBuildTool",
+			"args": [
+				"-projectfiles",
+				"-vscode",
+				"-project=D:\\UnrealProject\\ThirdPersonWalker\\ThirdPersonWalker.uproject",
+				"-game",
+				"-engine"
+			],
+			"console": "externalTerminal",
+			"stopAtEntry": false,
+			"cwd": "D:\\Unreal\\UE_5.0"
+		}
+	]
+}

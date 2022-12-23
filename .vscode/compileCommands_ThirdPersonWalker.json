@@ -1,0 +1,97 @@
+[
+	{
+		"file": "D:\\UnrealProject\\ThirdPersonWalker\\Source\\ThirdPersonWalker\\Cpp_Collectible.cpp",
+		"command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe\" @D:\\UnrealProject\\ThirdPersonWalker\\.vscode\\compileCommands_ThirdPersonWalker\\ThirdPersonWalker.205.rsp",
+		"directory": "D:\\Unreal\\UE_5.0\\Engine\\Source"
+	},
+	{
+		"file": "D:\\UnrealProject\\ThirdPersonWalker\\Source\\ThirdPersonWalker\\Cpp_Collectible.h",
+		"command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe\" @D:\\UnrealProject\\ThirdPersonWalker\\.vscode\\compileCommands_ThirdPersonWalker\\ThirdPersonWalker.205.rsp",
+		"directory": "D:\\Unreal\\UE_5.0\\Engine\\Source"
+	},
+	{
+		"file": "D:\\UnrealProject\\ThirdPersonWalker\\Source\\ThirdPersonWalker\\DA_Collectible.cpp",
+		"command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe\" @D:\\UnrealProject\\ThirdPersonWalker\\.vscode\\compileCommands_ThirdPersonWalker\\ThirdPersonWalker.205.rsp",
+		"directory": "D:\\Unreal\\UE_5.0\\Engine\\Source"
+	},
+	{
+		"file": "D:\\UnrealProject\\ThirdPersonWalker\\Source\\ThirdPersonWalker\\DA_Collectible.h",
+		"command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe\" @D:\\UnrealProject\\ThirdPersonWalker\\.vscode\\compileCommands_ThirdPersonWalker\\ThirdPersonWalker.205.rsp",
+		"directory": "D:\\Unreal\\UE_5.0\\Engine\\Source"
+	},
+	{
+		"file": "D:\\UnrealProject\\ThirdPersonWalker\\Source\\ThirdPersonWalker\\Private\\GatheringSpot.cpp",
+		"command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe\" @D:\\UnrealProject\\ThirdPersonWalker\\.vscode\\compileCommands_ThirdPersonWalker\\ThirdPersonWalker.205.rsp",
+		"directory": "D:\\Unreal\\UE_5.0\\Engine\\Source"
+	},
+	{
+		"file": "D:\\UnrealProject\\ThirdPersonWalker\\Source\\ThirdPersonWalker\\Private\\IInteractable.cpp",
+		"command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe\" @D:\\UnrealProject\\ThirdPersonWalker\\.vscode\\compileCommands_ThirdPersonWalker\\ThirdPersonWalker.205.rsp",
+		"directory": "D:\\Unreal\\UE_5.0\\Engine\\Source"
+	},
+	{
+		"file": "D:\\UnrealProject\\ThirdPersonWalker\\Source\\ThirdPersonWalker\\Private\\InteractableBase.cpp",
+		"command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe\" @D:\\UnrealProject\\ThirdPersonWalker\\.vscode\\compileCommands_ThirdPersonWalker\\ThirdPersonWalker.205.rsp",
+		"directory": "D:\\Unreal\\UE_5.0\\Engine\\Source"
+	},
+	{
+		"file": "D:\\UnrealProject\\ThirdPersonWalker\\Source\\ThirdPersonWalker\\Private\\NPC.cpp",
+		"command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe\" @D:\\UnrealProject\\ThirdPersonWalker\\.vscode\\compileCommands_ThirdPersonWalker\\ThirdPersonWalker.205.rsp",
+		"directory": "D:\\Unreal\\UE_5.0\\Engine\\Source"
+	},
+	{
+		"file": "D:\\UnrealProject\\ThirdPersonWalker\\Source\\ThirdPersonWalker\\Private\\PickupItem.cpp",
+		"command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe\" @D:\\UnrealProject\\ThirdPersonWalker\\.vscode\\compileCommands_ThirdPersonWalker\\ThirdPersonWalker.205.rsp",
+		"directory": "D:\\Unreal\\UE_5.0\\Engine\\Source"
+	},
+	{
+		"file": "D:\\UnrealProject\\ThirdPersonWalker\\Source\\ThirdPersonWalker\\Projectile.cpp",
+		"command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe\" @D:\\UnrealProject\\ThirdPersonWalker\\.vscode\\compileCommands_ThirdPersonWalker\\ThirdPersonWalker.205.rsp",
+		"directory": "D:\\Unreal\\UE_5.0\\Engine\\Source"
+	},
+	{
+		"file": "D:\\UnrealProject\\ThirdPersonWalker\\Source\\ThirdPersonWalker\\Projectile.h",
+		"command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe\" @D:\\UnrealProject\\ThirdPersonWalker\\.vscode\\compileCommands_ThirdPersonWalker\\ThirdPersonWalker.205.rsp",
+		"directory": "D:\\Unreal\\UE_5.0\\Engine\\Source"
+	},
+	{
+		"file": "D:\\UnrealProject\\ThirdPersonWalker\\Source\\ThirdPersonWalker\\Public\\GatheringSpot.h",
+		"command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe\" @D:\\UnrealProject\\ThirdPersonWalker\\.vscode\\compileCommands_ThirdPersonWalker\\ThirdPersonWalker.205.rsp",
+		"directory": "D:\\Unreal\\UE_5.0\\Engine\\Source"
+	},
+	{
+		"file": "D:\\UnrealProject\\ThirdPersonWalker\\Source\\ThirdPersonWalker\\Public\\IInteractable.h",
+		"command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe\" @D:\\UnrealProject\\ThirdPersonWalker\\.vscode\\compileCommands_ThirdPersonWalker\\ThirdPersonWalker.205.rsp",
+		"directory": "D:\\Unreal\\UE_5.0\\Engine\\Source"
+	},
+	{
+		"file": "D:\\UnrealProject\\ThirdPersonWalker\\Source\\ThirdPersonWalker\\Public\\InteractableBase.h",
+		"command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe\" @D:\\UnrealProject\\ThirdPersonWalker\\.vscode\\compileCommands_ThirdPersonWalker\\ThirdPersonWalker.205.rsp",
+		"directory": "D:\\Unreal\\UE_5.0\\Engine\\Source"
+	},
+	{
+		"file": "D:\\UnrealProject\\ThirdPersonWalker\\Source\\ThirdPersonWalker\\Public\\NPC.h",
+		"command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe\" @D:\\UnrealProject\\ThirdPersonWalker\\.vscode\\compileCommands_ThirdPersonWalker\\ThirdPersonWalker.205.rsp",
+		"directory": "D:\\Unreal\\UE_5.0\\Engine\\Source"
+	},
+	{
+		"file": "D:\\UnrealProject\\ThirdPersonWalker\\Source\\ThirdPersonWalker\\Public\\PickupItem.h",
+		"command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe\" @D:\\UnrealProject\\ThirdPersonWalker\\.vscode\\compileCommands_ThirdPersonWalker\\ThirdPersonWalker.205.rsp",
+		"directory": "D:\\Unreal\\UE_5.0\\Engine\\Source"
+	},
+	{
+		"file": "D:\\UnrealProject\\ThirdPersonWalker\\Source\\ThirdPersonWalker\\ThirdPersonWalker.Build.cs",
+		"command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe\" @D:\\UnrealProject\\ThirdPersonWalker\\.vscode\\compileCommands_ThirdPersonWalker\\ThirdPersonWalker.205.rsp",
+		"directory": "D:\\Unreal\\UE_5.0\\Engine\\Source"
+	},
+	{
+		"file": "D:\\UnrealProject\\ThirdPersonWalker\\Source\\ThirdPersonWalker\\ThirdPersonWalker.cpp",
+		"command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe\" @D:\\UnrealProject\\ThirdPersonWalker\\.vscode\\compileCommands_ThirdPersonWalker\\ThirdPersonWalker.205.rsp",
+		"directory": "D:\\Unreal\\UE_5.0\\Engine\\Source"
+	},
+	{
+		"file": "D:\\UnrealProject\\ThirdPersonWalker\\Source\\ThirdPersonWalker\\ThirdPersonWalker.h",
+		"command": "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.34.31933\\bin\\HostX64\\x64\\cl.exe\" @D:\\UnrealProject\\ThirdPersonWalker\\.vscode\\compileCommands_ThirdPersonWalker\\ThirdPersonWalker.205.rsp",
+		"directory": "D:\\Unreal\\UE_5.0\\Engine\\Source"
+	}
+]
