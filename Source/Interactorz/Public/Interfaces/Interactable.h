@@ -19,8 +19,7 @@ class INTERACTORZ_API IInteractable
 public:
 	virtual bool CanInteract(const AActor* InteractingActor) = 0;
 
-	virtual void Interact() = 0;
+	virtual void Interact(AActor* InteractingActor) = 0;
 
 	virtual FString GetInteractableName() = 0;
-
 };

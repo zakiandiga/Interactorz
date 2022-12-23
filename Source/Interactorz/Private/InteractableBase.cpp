@@ -9,20 +9,21 @@ AInteractableBase::AInteractableBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	InteractableCollider = CreateDefaultSubobject<USphereComponent>(TEXT("Interact Collider"));	
+	//InteractableCollider = CreateDefaultSubobject<USphereComponent>(TEXT("Interact Collider"));	
 
-	InteractableCollider->SetSphereRadius(InteractRange, true);
-	InteractableCollider->SetCollisionProfileName("InteractableTrigger");
+	//InteractableCollider->SetSphereRadius(InteractRange, true);
+	//InteractableCollider->SetCollisionProfileName("InteractableTrigger");
 }
 
 void AInteractableBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	InteractableCollider->OnComponentBeginOverlap.AddDynamic(this, &AInteractableBase::BeginOverlapDelegate);
-	InteractableCollider->OnComponentEndOverlap.AddDynamic(this, &AInteractableBase::EndOverlapDelegate);	
+	//InteractableCollider->OnComponentBeginOverlap.AddDynamic(this, &AInteractableBase::BeginOverlapDelegate);
+	//InteractableCollider->OnComponentEndOverlap.AddDynamic(this, &AInteractableBase::EndOverlapDelegate);	
 }
 
+/*
 void AInteractableBase::ToggleIconVisible(bool bIsSetToVisible)
 {
 	//set interact icon widget visible/hidden
@@ -39,4 +40,5 @@ void AInteractableBase::EndOverlapDelegate(UPrimitiveComponent* OverlappedCompon
 	ToggleIconVisible(false);
 	CurrentInteractablePlayer = nullptr;
 }
+*/
 

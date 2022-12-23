@@ -10,6 +10,7 @@
 
 class UCameraComponent;
 class USpringArmComponent;
+class USphereComponent;
 class UInventory;
 class IInteractable;
 class UPlayerOverlay;
@@ -38,12 +39,6 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UPROPERTY(BlueprintAssignable)
-	FOnInteractableFound OnInteractableFound;
-
-	UPROPERTY(BlueprintAssignable)
-	FOnInteractableGone OnInteractableGone;
-
 private:	
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Components")
 	UPlayerOverlay* PlayerOverlay;
@@ -54,19 +49,25 @@ private:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Components")
 	UCameraComponent* PlayerCamera;
 
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Components")
+	USphereComponent* InteractableCollider;
+
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "ControllerProperties");
 	float RotationRate = 400.f;
 
 	UPROPERTY(EditAnywhere, meta = (AllowAPrivateAccess = "true"), Category = "Inventory")
 	UInventory* PlayerInventory;
 
+	UPROPERTY(VisibleAnywhere, Category = "Player Interaction")
 	EPlayerControlStates PlayerControlState = EPlayerControlStates::EPC_OnCharacter;
 
 	IInteractable* CurrentInteractable = nullptr;
+
+	UPROPERTY(VisibleAnywhere, Category = "Player Interaction")
 	bool bIsLineTracingForInteractable = false;
+
+	UPROPERTY(VisibleAnywhere, Category = "Player Interaction")
 	float InteractLineTraceLength = 300.f;
-
-
 
 	void MoveForward(float Value);
 	void MoveSide(float Value);
@@ -76,14 +77,24 @@ private:
 	void TracingForInteractable();
 	void AssignInteractable(IInteractable* InteractableToAssign);
 	void ClearInteractable();
+	void FaceInteractable();
 
 
 public:
+
+	virtual void OnItemTransferSuccess() override;
+	virtual void OnItemTransferFailed() override;
 
 	UFUNCTION(BlueprintPure, Category = "Inventory")
 	FORCEINLINE UInventory* GetActorInventory() const { return PlayerInventory; }
 
 	UFUNCTION(BlueprintPure, Category = "MoveStates")
 	FORCEINLINE EPlayerControlStates GetPlayerMoveStates() const { return PlayerControlState; }
+
+	UPROPERTY(BlueprintAssignable)
+	FOnInteractableFound OnInteractableFound;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnInteractableGone OnInteractableGone;
 
 };

@@ -11,26 +11,26 @@ ANPC::ANPC()
 	BodyMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Body"));
     
     BodyMesh->SetupAttachment(RootComponent);
-    InteractableCollider->SetupAttachment(BodyMesh);
+    //InteractableCollider->SetupAttachment(BodyMesh);
 
 }
 
 void ANPC::BeginPlay()
 {
-    Super::BeginPlay();
+    //Super::BeginPlay();
 }
 
 void ANPC::Tick(float DeltaTime)
 {
-    Super::Tick(DeltaTime);
+    //Super::Tick(DeltaTime);
 }
 
 bool ANPC::CanInteract(const AActor* InteractingActor)
 {
-    return InteractingActor == GetCurrentInteractableActor();
+    return true; // InteractingActor == GetCurrentInteractableActor();
 }
 
-void ANPC::Interact()
+void ANPC::Interact(AActor* InteractingActor)
 {
     //Start dialogue interface
 }

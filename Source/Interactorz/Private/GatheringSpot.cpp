@@ -37,7 +37,7 @@ bool AGatheringSpot::CanInteract(const AActor* InteractingActor)
 	return false;
 }
 
-void AGatheringSpot::Interact()
+void AGatheringSpot::Interact(AActor* InteractingActor)
 {
 }
 

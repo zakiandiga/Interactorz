@@ -4,9 +4,11 @@
 #include "PlayerCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "PlayerOverlay.h"
+#include "Components/SphereComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "PlayerOverlay.h"
 #include "Inventory.h"
 #include "Interfaces/Interactable.h"
 #include "DebugHelpers/DebugMacros.h"
@@ -23,25 +25,30 @@ APlayerCharacter::APlayerCharacter()
 	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Player Camera"));
 	PlayerInventory = CreateDefaultSubobject<UInventory>(TEXT("Player Inventory"));
 	PlayerOverlay = CreateDefaultSubobject<UPlayerOverlay>(TEXT("Player Overlay"));
+	InteractableCollider = CreateDefaultSubobject<USphereComponent>(TEXT("Interactable Collider"));
 
 	CameraBoom->SetupAttachment(GetRootComponent());
 	PlayerCamera->SetupAttachment(CameraBoom);
+	InteractableCollider->SetupAttachment(GetRootComponent());
 
 	CameraBoom->bUsePawnControlRotation = true;
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0, RotationRate, 0);
 
+	InteractableCollider->SetGenerateOverlapEvents(true);
+
+	InteractableCollider->IgnoreActorWhenMoving(this, true);
 }
 
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::BeginOverlapDelegate);
-	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacter::EndOverlapDelegate);
+	InteractableCollider->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::BeginOverlapDelegate);
+	InteractableCollider->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacter::EndOverlapDelegate);
 
 	TSet<AActor*> CurrentlyOverlappingActors;
-	GetOverlappingActors(CurrentlyOverlappingActors);
+	InteractableCollider->GetOverlappingActors(CurrentlyOverlappingActors);
 
 	if (CurrentlyOverlappingActors.Num() <= 0) return;
 
@@ -51,11 +58,10 @@ void APlayerCharacter::BeginPlay()
 
 void APlayerCharacter::BeginOverlapDelegate(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//start linesweep
+	if (OtherActor == this) return;
 	if (bIsLineTracingForInteractable) return;
 
 	bIsLineTracingForInteractable = true;
-	UE_LOG(LogTemp, Warning, TEXT("LineTracing for Interactable currently ON"));
 }
 
 void APlayerCharacter::EndOverlapDelegate(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -63,30 +69,23 @@ void APlayerCharacter::EndOverlapDelegate(UPrimitiveComponent* OverlappedCompone
 	if (!bIsLineTracingForInteractable) return;
 
 	TSet<AActor*> CurrentlyOverlappingActors; 
-	GetOverlappingActors(CurrentlyOverlappingActors);
-	
+	InteractableCollider->GetOverlappingActors(CurrentlyOverlappingActors);
+
 	if (CurrentlyOverlappingActors.Num() > 0) return;
 
+	ClearInteractable();
 	bIsLineTracingForInteractable = false;
-	UE_LOG(LogTemp, Warning, TEXT("LineTracing for Interactable currently OFF"));
-
 }
 
 // Called every frame
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (!bIsLineTracingForInteractable)
+		
+	if (bIsLineTracingForInteractable)
 	{
-		if (CurrentInteractable == nullptr) return;
-
-		OnInteractableGone.Broadcast(CurrentInteractable->GetInteractableName());
-		CurrentInteractable = nullptr;
-		return;
+		TracingForInteractable();
 	}
-
-	TracingForInteractable();	
 }
 
 // Called to bind functionality to input
@@ -101,7 +100,6 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction(TEXT("Action01"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Action01);
-
 }
 
 void APlayerCharacter::MoveForward(float Value)
@@ -147,20 +145,18 @@ void APlayerCharacter::LookUp(float Value)
 void APlayerCharacter::Action01()
 {
 	if (CurrentInteractable == nullptr) return;
-	if (!CurrentInteractable->CanInteract(Cast<AActor>(this))) return;
+	//if (!CurrentInteractable->CanInteract(Cast<AActor>(this))) return;
 
 	//start interacting animation, on selected montage, change PlayerControlState back to OnCharacter
-	
-	//Temporary interact
-	PlayerControlState = EPlayerControlStates::EPC_Interacting;
-	CurrentInteractable->Interact();
 
-	PlayerControlState = EPlayerControlStates::EPC_OnCharacter;
+	PlayerControlState = EPlayerControlStates::EPC_Interacting;
+	CurrentInteractable->Interact(Cast<AActor>(this));
+	FaceInteractable();
+
 }
 
 void APlayerCharacter::TracingForInteractable()
 {
-
 	FVector Start = CameraBoom->GetComponentLocation();
 	FVector End = Start + (PlayerCamera->GetForwardVector() * InteractLineTraceLength);
 	FHitResult CurrentHitResult;
@@ -186,15 +182,8 @@ void APlayerCharacter::AssignInteractable(IInteractable* InteractableToAssign)
 	if (InteractableToAssign == CurrentInteractable) return;
 
 	ClearInteractable();
-
-	CurrentInteractable = InteractableToAssign;
-	
+	CurrentInteractable = InteractableToAssign;	
 	OnInteractableFound.Broadcast(CurrentInteractable->GetInteractableName());
-
-
-	///Current bug:
-	//if a pickup item spawned at where the player is inside the overlap range, it doesn't register the player as current interactable player
-
 }
 
 void APlayerCharacter::ClearInteractable()
@@ -203,6 +192,35 @@ void APlayerCharacter::ClearInteractable()
 
 	OnInteractableGone.Broadcast(CurrentInteractable->GetInteractableName());
 	CurrentInteractable = nullptr;
+}
+
+void APlayerCharacter::FaceInteractable()
+{
+	if (CurrentInteractable == nullptr) return;
+
+	FVector TargetLook = Cast<AActor>(CurrentInteractable)->GetActorLocation() - GetActorLocation();
+
+	FRotator LookRotation = FRotator::ZeroRotator;
+	LookRotation.Yaw = TargetLook.Rotation().Yaw;
+
+	FRotator CurrentRotation = GetViewRotation();
+
+	SetActorRotation(LookRotation);
+
+}
+
+void APlayerCharacter::OnItemTransferSuccess()
+{
+	//notify UI inventory updated
+
+	PlayerControlState = EPlayerControlStates::EPC_OnCharacter;
+}
+
+void APlayerCharacter::OnItemTransferFailed()
+{
+	//notify warning notification UI, inventory is full
+
+	PlayerControlState = EPlayerControlStates::EPC_OnCharacter;
 }
 
 

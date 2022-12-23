@@ -15,45 +15,43 @@ APickupItem::APickupItem()
 	ItemData = CreateDefaultSubobject<UDA_ItemData>(TEXT("Item Info"));
 	
 	SetRootComponent(ItemSprite);
-	InteractableCollider->SetupAttachment(ItemSprite);
-	
+	//InteractableCollider->SetupAttachment(ItemSprite);	
+	ItemSprite->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Overlap);
 }
 
-void APickupItem::BeginPlay()
-{
-	Super::BeginPlay();
-}
 
 void APickupItem::BeginOverlapDelegate(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	Super::BeginOverlapDelegate(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);	
+	//Super::BeginOverlapDelegate(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);	
 
 }
 
 void APickupItem::EndOverlapDelegate(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	Super::EndOverlapDelegate(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex);
+	//Super::EndOverlapDelegate(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex);
 }
 
 bool APickupItem::CanInteract(const AActor* InteractingActor)
 {
-	return InteractingActor == GetCurrentInteractableActor();
+	return true; // InteractingActor == GetCurrentInteractableActor();
 }
 
-void APickupItem::Interact()
+void APickupItem::Interact(AActor* InteractingActor)
 {	
-	UInventory* InteractingActorInventory = Cast<IInventoryOwner>(GetCurrentInteractableActor())->GetActorInventory();
-	if (InteractingActorInventory == nullptr) return;
+	IInventoryOwner* InventoryOwner = Cast<IInventoryOwner>(InteractingActor);
+	UInventory* InteractingInventory = InventoryOwner->GetActorInventory();
+	if (InteractingInventory == nullptr) return;
 	
-	if (InteractingActorInventory->CheckSpaceAvailable() < ItemQuantity)
+	if (InteractingInventory->CheckSpaceAvailable() < ItemQuantity)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Your inventory is full!"));
+		InventoryOwner->OnItemTransferFailed();
 		return;
 	}
 
-	InteractingActorInventory->AddToInventory(ItemData, ItemQuantity);
-	UE_LOG(LogTemp, Warning, TEXT("%d of %s added to the %s"), ItemQuantity, *ItemData->ItemInfo.Name, *InteractingActorInventory->GetOwner()->GetActorNameOrLabel());
-
+	InteractingInventory->AddToInventory(ItemData, ItemQuantity);
+	UE_LOG(LogTemp, Warning, TEXT("%d of %s added to the %s"), ItemQuantity, *ItemData->ItemInfo.Name, *InteractingInventory->GetOwner()->GetActorNameOrLabel());
+	InventoryOwner->OnItemTransferSuccess();
 	Destroy();
 }
 

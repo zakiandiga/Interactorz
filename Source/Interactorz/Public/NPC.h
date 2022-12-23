@@ -9,7 +9,7 @@
 
 class USkeletalMeshComponent;
 UCLASS()
-class INTERACTORZ_API ANPC : public AInteractableBase, public IInteractable
+class INTERACTORZ_API ANPC : public APawn, public IInteractable
 {
 	GENERATED_BODY()
 
@@ -26,7 +26,7 @@ public:
 	bool CanInteract(const AActor* InteractingActor) override;
 
 	UFUNCTION(BlueprintCallable)
-	void Interact() override;
+	void Interact(AActor* InteractingActor) override;
 
 	FString GetInteractableName() override;
 

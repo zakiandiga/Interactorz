@@ -18,5 +18,6 @@ class INTERACTORZ_API IInventoryOwner
 
 public:
 	virtual class UInventory* GetActorInventory() const = 0;
-
+	virtual void OnItemTransferSuccess() = 0;
+	virtual void OnItemTransferFailed() = 0;
 };

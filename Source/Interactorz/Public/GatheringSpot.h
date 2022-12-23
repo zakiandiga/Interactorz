@@ -9,7 +9,7 @@
 
 class UDA_ItemData;
 UCLASS()
-class INTERACTORZ_API AGatheringSpot : public AInteractableBase, public IInteractable
+class INTERACTORZ_API AGatheringSpot : public AActor, public IInteractable
 {
 	GENERATED_BODY()
 	
@@ -28,7 +28,7 @@ public:
 		bool CanInteract(const AActor* InteractingActor) override;
 
 	UFUNCTION(BlueprintCallable)
-		void Interact() override;
+		void Interact(AActor* InteractingActor) override;
 
 	FString GetInteractableName() override;
 
