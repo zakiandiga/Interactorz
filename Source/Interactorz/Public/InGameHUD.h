@@ -7,6 +7,9 @@
 #include "InGameHUD.generated.h"
 
 class UPlayerOverlay;
+class UInGameMenu;
+class APlayerCharacter;
+class UUserWidget;
 UCLASS()
 class INTERACTORZ_API AInGameHUD : public AHUD
 {
@@ -17,15 +20,25 @@ protected:
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UInGameMenu> InGameMenuClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UPlayerOverlay> PlayerOverlayClass;
 
+	UPROPERTY(VisibleAnywhere, Category = "UI")
+	APlayerCharacter* HUDOwner;
 
 	UPlayerOverlay* PlayerOverlay;
+
+	UInGameMenu* InGameMenu;
 
 	UFUNCTION()
 	void DisplayInteractableInfo(FString InteractableName);
 
 	UFUNCTION()
 	void HideInteractableInfo(FString InteractableName);
+
+	UFUNCTION()
+	void OpenMenu(bool bIsOpening);
 	
 };

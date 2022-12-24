@@ -3,6 +3,7 @@
 
 #include "InGameHUD.h"
 #include "PlayerOverlay.h"
+#include "UI/InGameMenu.h"
 #include "PlayerCharacter.h"
 
 void AInGameHUD::BeginPlay()
@@ -10,6 +11,7 @@ void AInGameHUD::BeginPlay()
 	Super::BeginPlay();
 
 	APlayerController* Controller = GetWorld()->GetFirstPlayerController();
+	HUDOwner = Cast<APlayerCharacter>(Controller->GetPawn());
 	
 	if (Controller == nullptr || PlayerOverlayClass == nullptr) return;
 
@@ -17,11 +19,16 @@ void AInGameHUD::BeginPlay()
 	PlayerOverlay->AddToViewport();
 	PlayerOverlay->SetInteractableInfoPanelHidden(FString());
 
-	APlayerCharacter* Player = Cast<APlayerCharacter>(Controller->GetPawn());
-	if (Player == nullptr) return;
+	InGameMenu = CreateWidget<UInGameMenu>(Controller, InGameMenuClass);
+	InGameMenu->AddToViewport();
+	InGameMenu->SetMainPanelHidden();
 
-	Player->OnInteractableFound.AddDynamic(this, &AInGameHUD::DisplayInteractableInfo);
-	Player->OnInteractableGone.AddDynamic(this, &AInGameHUD::HideInteractableInfo);
+	if (HUDOwner == nullptr) return;
+
+	HUDOwner->OnInteractableFound.AddDynamic(this, &AInGameHUD::DisplayInteractableInfo);
+	HUDOwner->OnInteractableGone.AddDynamic(this, &AInGameHUD::HideInteractableInfo);
+
+	HUDOwner->OnPlayerOpeningMenu.AddDynamic(this, &AInGameHUD::OpenMenu);
 }
 
 void AInGameHUD::DisplayInteractableInfo(FString InteractableName)
@@ -32,4 +39,15 @@ void AInGameHUD::DisplayInteractableInfo(FString InteractableName)
 void AInGameHUD::HideInteractableInfo(FString InteractableName)
 {
 	PlayerOverlay->SetInteractableInfoPanelHidden(InteractableName);
+}
+
+void AInGameHUD::OpenMenu(bool bIsOpening)
+{
+	if (!bIsOpening)
+	{
+		InGameMenu->SetMainPanelHidden();
+		return;
+	}
+
+	InGameMenu->SetMainPanelVisible();
 }

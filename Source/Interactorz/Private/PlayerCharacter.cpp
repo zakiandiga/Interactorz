@@ -44,6 +44,8 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	InteractLineTraceLength = InteractableCollider->GetScaledSphereRadius();
+
 	InteractableCollider->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::BeginOverlapDelegate);
 	InteractableCollider->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacter::EndOverlapDelegate);
 
@@ -98,14 +100,24 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAxis(TEXT("LookRight"), this, &APlayerCharacter::Turn);
 	PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &APlayerCharacter::LookUp);
 
-	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Jump);
 	PlayerInputComponent->BindAction(TEXT("Action01"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Action01);
+	PlayerInputComponent->BindAction(TEXT("Menu"), EInputEvent::IE_Pressed, this, &APlayerCharacter::ToggleMenu);
+}
+
+void APlayerCharacter::Jump()
+{
+	if (Controller == nullptr) return;
+	if (PlayerControlState != EPlayerControlStates::EPC_OnCharacter) return;
+
+	Super::Jump();
 }
 
 void APlayerCharacter::MoveForward(float Value)
 {
 	if (Controller == nullptr) return;
 	if (Value == 0) return;
+	if (PlayerControlState != EPlayerControlStates::EPC_OnCharacter) return;
 
 	const FRotator ControllerRotation = GetControlRotation();
 	const FRotator YawRotation(0, ControllerRotation.Yaw, 0);
@@ -118,6 +130,7 @@ void APlayerCharacter::MoveSide(float Value)
 {
 	if (Controller == nullptr) return;
 	if (Value == 0) return;
+	if (PlayerControlState != EPlayerControlStates::EPC_OnCharacter) return;
 
 	const FRotator ControllerRotation = GetControlRotation();
 	const FRotator YawRotation(0, ControllerRotation.Yaw, 0);
@@ -130,6 +143,7 @@ void APlayerCharacter::Turn(float Value)
 {
 	if (Controller == nullptr) return;
 	if (Value == 0) return;
+	if (PlayerControlState != EPlayerControlStates::EPC_OnCharacter) return;
 
 	AddControllerYawInput(Value);
 }
@@ -138,26 +152,55 @@ void APlayerCharacter::LookUp(float Value)
 {
 	if (Controller == nullptr) return;
 	if (Value == 0) return;
+	if (PlayerControlState != EPlayerControlStates::EPC_OnCharacter) return;
 
 	AddControllerPitchInput(Value);
 }
 
 void APlayerCharacter::Action01()
 {
+	if (Controller == nullptr) return;
+	if (PlayerControlState != EPlayerControlStates::EPC_OnCharacter) return;
+
 	if (CurrentInteractable == nullptr) return;
-	//if (!CurrentInteractable->CanInteract(Cast<AActor>(this))) return;
 
 	//start interacting animation, on selected montage, change PlayerControlState back to OnCharacter
 
 	PlayerControlState = EPlayerControlStates::EPC_Interacting;
 	CurrentInteractable->Interact(Cast<AActor>(this));
 	FaceInteractable();
+}
 
+void APlayerCharacter::ToggleMenu()
+{
+	if (Controller == nullptr) return;
+
+	float CurrentTimeDilation = UGameplayStatics::GetGlobalTimeDilation(this);
+	UE_LOG(LogTemp, Warning, TEXT("current global time dilation = %f"), CurrentTimeDilation);
+	switch (PlayerControlState)
+	{
+	case EPlayerControlStates::EPC_OnMenu:
+		UGameplayStatics::SetGlobalTimeDilation(this, 1.f);
+		OnPlayerOpeningMenu.Broadcast(false);
+		//broadcast opening menu
+		PlayerControlState = EPlayerControlStates::EPC_OnCharacter;
+		break;
+	case EPlayerControlStates::EPC_OnCharacter:
+		UGameplayStatics::SetGlobalTimeDilation(this, 0.f);
+		OnPlayerOpeningMenu.Broadcast(true);
+		//close menu
+		PlayerControlState = EPlayerControlStates::EPC_OnMenu;
+		break;
+	case EPlayerControlStates::EPC_Interacting:
+		break;
+	default:
+		break;
+	}
 }
 
 void APlayerCharacter::TracingForInteractable()
 {
-	FVector Start = CameraBoom->GetComponentLocation();
+	FVector Start = PlayerCamera->GetComponentLocation() + (PlayerCamera->GetForwardVector() * CameraBoom->TargetArmLength);
 	FVector End = Start + (PlayerCamera->GetForwardVector() * InteractLineTraceLength);
 	FHitResult CurrentHitResult;
 	FCollisionQueryParams LineTraceParams;

@@ -16,7 +16,7 @@ class IInteractable;
 class UPlayerOverlay;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableFound, FString, InteractableName);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableGone, FString, InteractableName);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerOpeningMenu, bool, bIsOpening); //false = closing
 UCLASS()
 class INTERACTORZ_API APlayerCharacter : public ACharacter, public IInventoryOwner
 {
@@ -38,6 +38,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	virtual void Jump() override;
 
 private:	
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Components")
@@ -67,13 +69,14 @@ private:
 	bool bIsLineTracingForInteractable = false;
 
 	UPROPERTY(VisibleAnywhere, Category = "Player Interaction")
-	float InteractLineTraceLength = 300.f;
+	float InteractLineTraceLength = 500.f;
 
 	void MoveForward(float Value);
 	void MoveSide(float Value);
 	void Turn(float Value);
 	void LookUp(float Value);
 	void Action01();
+	void ToggleMenu();
 	void TracingForInteractable();
 	void AssignInteractable(IInteractable* InteractableToAssign);
 	void ClearInteractable();
@@ -88,13 +91,19 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Inventory")
 	FORCEINLINE UInventory* GetActorInventory() const { return PlayerInventory; }
 
-	UFUNCTION(BlueprintPure, Category = "MoveStates")
+	UFUNCTION(BlueprintPure, Category = "Move States")
 	FORCEINLINE EPlayerControlStates GetPlayerMoveStates() const { return PlayerControlState; }
+
+	UFUNCTION(BlueprintCallable, Category = "Move States")
+	FORCEINLINE void SetPlayerMoveState(EPlayerControlStates StateToSet = EPlayerControlStates::EPC_OnCharacter) { PlayerControlState = StateToSet; }
 
 	UPROPERTY(BlueprintAssignable)
 	FOnInteractableFound OnInteractableFound;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnInteractableGone OnInteractableGone;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnPlayerOpeningMenu OnPlayerOpeningMenu;
 
 };
