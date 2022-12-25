@@ -7,6 +7,10 @@
 #include "InGameMenu.generated.h"
 
 class UCanvasPanel;
+class UListView;
+class UInventory;
+class UInventoryListEntry;
+
 UCLASS()
 class INTERACTORZ_API UInGameMenu : public UUserWidget
 {
@@ -16,10 +20,30 @@ public:
 	void SetMainPanelVisible();
 	void SetMainPanelHidden();
 
-private:
-	UPROPERTY(meta = (BindWidget))
+	void DisplayInventoryList();
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnDisplayingInventoryList(const TArray<class UInventoryDataEntryContainer*>& DataContainer);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ClearInventoryList();
+
+	void SetOwnerInventory(UInventory* InventoryToSet) { OwnerInventory = InventoryToSet; }
+
+
+
+	UPROPERTY(BlueprintReadOnly, Category = "Inventory")
+	UInventory* OwnerInventory;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget), Category = "UI | Inventory")
 	UCanvasPanel* MainPanel;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget), Category = "UI | Inventory")
 	UCanvasPanel* InventoryPanel;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget), Category = "UI | Inventory")
+	UListView* InventoryList;
+
+	TArray<UInventoryDataEntryContainer*> DataContainersToDisplay = TArray<UInventoryDataEntryContainer*>();
+
 };

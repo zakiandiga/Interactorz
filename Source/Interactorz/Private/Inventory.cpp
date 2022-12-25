@@ -14,7 +14,6 @@ UInventory::UInventory()
 void UInventory::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void UInventory::AddToInventory(UDA_ItemData* ItemToAdd, int32 QuantityToAdd)

@@ -25,6 +25,8 @@ void AInGameHUD::BeginPlay()
 
 	if (HUDOwner == nullptr) return;
 
+	InGameMenu->SetOwnerInventory(HUDOwner->GetActorInventory());
+
 	HUDOwner->OnInteractableFound.AddDynamic(this, &AInGameHUD::DisplayInteractableInfo);
 	HUDOwner->OnInteractableGone.AddDynamic(this, &AInGameHUD::HideInteractableInfo);
 
@@ -45,9 +47,11 @@ void AInGameHUD::OpenMenu(bool bIsOpening)
 {
 	if (!bIsOpening)
 	{
+		InGameMenu->ClearInventoryList();
 		InGameMenu->SetMainPanelHidden();
 		return;
 	}
 
+	InGameMenu->DisplayInventoryList();
 	InGameMenu->SetMainPanelVisible();
 }

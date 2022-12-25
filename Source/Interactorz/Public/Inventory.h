@@ -23,10 +23,13 @@ public:
 
 	void RemoveFromInventory(UDA_ItemData* ItemToRemove, int32 QuantityToRemove);	
 
-private:
+	UFUNCTION(BlueprintPure, Category = "Inventory")
+	TMap<UDA_ItemData*, int32> GetActiveInventory() const { return ActiveInventory; }
 
+private:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Inventory Properties")
 	TMap<UDA_ItemData*, int32> ActiveInventory;
+
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Inventory Properties")
 	int32 InventoryLimit = 20;
