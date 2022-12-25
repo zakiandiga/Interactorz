@@ -27,7 +27,7 @@ public:
 	TMap<UDA_ItemData*, int32> GetActiveInventory() const { return ActiveInventory; }
 
 private:
-	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Inventory Properties")
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Inventory Properties")
 	TMap<UDA_ItemData*, int32> ActiveInventory;
 
 

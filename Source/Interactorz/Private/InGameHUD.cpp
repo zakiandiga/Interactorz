@@ -48,7 +48,6 @@ void AInGameHUD::OpenMenu(bool bIsOpening)
 	if (!bIsOpening)
 	{
 		InGameMenu->ClearInventoryList();
-		InGameMenu->SetMainPanelHidden();
 		return;
 	}
 

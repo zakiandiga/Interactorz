@@ -23,7 +23,7 @@ void UInGameMenu::SetMainPanelHidden()
 void UInGameMenu::DisplayInventoryList()
 {
 	if (OwnerInventory == nullptr) return;
-	for (TPair<UDA_ItemData*, int32> item : OwnerInventory->GetActiveInventory())
+	for (TPair<UDA_ItemData*, int32>& item : OwnerInventory->GetActiveInventory())
 	{
 		if (item.Key == nullptr) return;
 

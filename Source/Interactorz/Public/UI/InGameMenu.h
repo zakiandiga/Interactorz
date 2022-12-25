@@ -44,6 +44,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget), Category = "UI | Inventory")
 	UListView* InventoryList;
 
+	UPROPERTY(BlueprintReadWrite, Category = "UI | Inventory")
 	TArray<UInventoryDataEntryContainer*> DataContainersToDisplay = TArray<UInventoryDataEntryContainer*>();
 
 };
