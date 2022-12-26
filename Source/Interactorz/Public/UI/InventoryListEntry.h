@@ -17,21 +17,17 @@ class INTERACTORZ_API UInventoryListEntry : public UUserWidget, public IUserObje
 {
 	GENERATED_BODY()
 	
-public:
-	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void SetInventoryDataEntry(UTexture2D* IconToSet, FString NameToSet, int32 QuantityToSet);
-
 protected:
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-		UImage* ItemIcon;
+	UImage* ItemIcon;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-		UTextBlock* NameText;
+	UTextBlock* NameText;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-		UTextBlock* QuantityText;
+	UTextBlock* QuantityText;
 
 };
 

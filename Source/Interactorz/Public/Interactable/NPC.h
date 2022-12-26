@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "InteractableBase.h"
 #include "Interfaces/Interactable.h"
 #include "NPC.generated.h"
 
@@ -28,6 +27,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Interact(AActor* InteractingActor) override;
 
+	UFUNCTION(BlueprintCallable)
 	FString GetInteractableName() override;
 
 private:

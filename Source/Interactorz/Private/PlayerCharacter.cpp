@@ -8,7 +8,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "PlayerOverlay.h"
+#include "UI/PlayerOverlay.h"
 #include "Inventory.h"
 #include "Interfaces/Interactable.h"
 #include "DebugHelpers/DebugMacros.h"
@@ -182,13 +182,11 @@ void APlayerCharacter::ToggleMenu()
 	case EPlayerControlStates::EPC_OnMenu:
 		UGameplayStatics::SetGlobalTimeDilation(this, 1.f);
 		OnPlayerOpeningMenu.Broadcast(false);
-		//broadcast opening menu
 		PlayerControlState = EPlayerControlStates::EPC_OnCharacter;
 		break;
 	case EPlayerControlStates::EPC_OnCharacter:
 		UGameplayStatics::SetGlobalTimeDilation(this, 0.f);
 		OnPlayerOpeningMenu.Broadcast(true);
-		//close menu
 		PlayerControlState = EPlayerControlStates::EPC_OnMenu;
 		break;
 	case EPlayerControlStates::EPC_Interacting:
@@ -205,8 +203,7 @@ void APlayerCharacter::TracingForInteractable()
 	FHitResult CurrentHitResult;
 	FCollisionQueryParams LineTraceParams;
 	LineTraceParams.AddIgnoredActor(this);
-	
-	DRAW_LINE_Tick(Start, End, FColor::Cyan);
+
 	GetWorld()->LineTraceSingleByChannel(CurrentHitResult, Start, End, ECollisionChannel::ECC_Visibility, LineTraceParams);
 
 	IInteractable* HitInteractable = Cast<IInteractable>(CurrentHitResult.GetActor());
@@ -249,19 +246,18 @@ void APlayerCharacter::FaceInteractable()
 	FRotator CurrentRotation = GetViewRotation();
 
 	SetActorRotation(LookRotation);
-
 }
 
 void APlayerCharacter::OnItemTransferSuccess()
 {
-	//notify UI inventory updated
+	//Display item retrieved message
 
 	PlayerControlState = EPlayerControlStates::EPC_OnCharacter;
 }
 
 void APlayerCharacter::OnItemTransferFailed()
 {
-	//notify warning notification UI, inventory is full
+	//Display inventory is full warning
 
 	PlayerControlState = EPlayerControlStates::EPC_OnCharacter;
 }

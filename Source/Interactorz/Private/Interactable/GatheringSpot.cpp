@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GatheringSpot.h"
+#include "Interactable/GatheringSpot.h"
 #include "Components/SphereComponent.h"
 #include "DA_ItemData.h"
 #include "Inventory.h"

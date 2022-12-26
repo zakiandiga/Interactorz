@@ -14,8 +14,7 @@ class USphereComponent;
 class UInventory;
 class IInteractable;
 class UPlayerOverlay;
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableFound, FString, InteractableName);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableGone, FString, InteractableName);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableTraced, FString, InteractableName);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerOpeningMenu, bool, bIsOpening); //false = closing
 UCLASS()
 class INTERACTORZ_API APlayerCharacter : public ACharacter, public IInventoryOwner
@@ -98,10 +97,10 @@ public:
 	FORCEINLINE void SetPlayerMoveState(EPlayerControlStates StateToSet = EPlayerControlStates::EPC_OnCharacter) { PlayerControlState = StateToSet; }
 
 	UPROPERTY(BlueprintAssignable)
-	FOnInteractableFound OnInteractableFound;
+	FOnInteractableTraced OnInteractableFound;
 
 	UPROPERTY(BlueprintAssignable)
-	FOnInteractableGone OnInteractableGone;
+	FOnInteractableTraced OnInteractableGone;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnPlayerOpeningMenu OnPlayerOpeningMenu;

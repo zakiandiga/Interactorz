@@ -28,8 +28,13 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "UI")
 	APlayerCharacter* HUDOwner;
 
+	UPROPERTY(VisibleAnywhere, Category = "Controller")
+	APlayerController* PlayerController;
+
+	UPROPERTY()
 	UPlayerOverlay* PlayerOverlay;
 
+	UPROPERTY()
 	UInGameMenu* InGameMenu;
 
 	UFUNCTION()

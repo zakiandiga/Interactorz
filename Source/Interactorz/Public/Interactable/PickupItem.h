@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "InteractableBase.h"
 #include "Interfaces/Interactable.h"
 #include "PickupItem.generated.h"
 
@@ -17,19 +16,13 @@ class INTERACTORZ_API APickupItem : public AActor, public IInteractable
 public:
 	APickupItem();
 
-protected:
-
-	virtual void BeginOverlapDelegate(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	virtual void EndOverlapDelegate(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
-public:
 	UFUNCTION(BlueprintCallable)
 	bool CanInteract(const AActor* InteractingActor) override;
 
 	UFUNCTION(BlueprintCallable)
 	void Interact(AActor* InteractingActor) override;
 
+	UFUNCTION(BlueprintCallable, Category = "Interactable")
 	FString GetInteractableName() override;
 
 private:

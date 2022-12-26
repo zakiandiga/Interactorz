@@ -4,6 +4,7 @@
 #include "UI/InventoryListEntry.h"
 #include "UI/InventoryDataEntryContainer.h"
 #include "Components/CanvasPanel.h"
+#include "Components/WidgetSwitcher.h"
 //#include "Components/ListView.h"
 #include "Inventory.h"
 #include "DA_ItemData.h"
@@ -15,8 +16,7 @@ void UInGameMenu::SetMainPanelVisible()
 
 void UInGameMenu::SetMainPanelHidden()
 {
-	MainPanel->SetVisibility(ESlateVisibility::Hidden);
-
+	MainPanel->SetVisibility(ESlateVisibility::Hidden);	
 	
 }
 
@@ -31,16 +31,9 @@ void UInGameMenu::DisplayInventoryList()
 		UInventoryDataEntryContainer* DataContainer = NewObject<UInventoryDataEntryContainer>();
 		DataContainer->SetDataEntryContainer(itemData->ItemInfo.Icon, itemData->ItemInfo.Name, item.Value);
 		DataContainersToDisplay.Emplace(DataContainer);
-		//InventoryList->AddItem(Cast<UObject>(DataContainer));
 	}
-	//UInventoryDataEntryContainer* DataContainer = NewObject<UInventoryDataEntryContainer>();
+
 	OnDisplayingInventoryList(DataContainersToDisplay);
 }
-
-//void UInGameMenu::ClearInventoryList()
-//{
-	//InventoryList->ClearListItems();
-//}
-
 
 

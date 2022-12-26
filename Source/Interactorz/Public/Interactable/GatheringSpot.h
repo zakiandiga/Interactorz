@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "InteractableBase.h"
 #include "Interfaces/Interactable.h"
 #include "GatheringSpot.generated.h"
 
@@ -25,10 +24,10 @@ protected:
 
 public:
 	UFUNCTION(BlueprintCallable)
-		bool CanInteract(const AActor* InteractingActor) override;
+	bool CanInteract(const AActor* InteractingActor) override;
 
 	UFUNCTION(BlueprintCallable)
-		void Interact(AActor* InteractingActor) override;
+	void Interact(AActor* InteractingActor) override;
 
 	FString GetInteractableName() override;
 

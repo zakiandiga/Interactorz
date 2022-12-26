@@ -3,13 +3,6 @@
 
 #include "UI/InventoryDataEntryContainer.h"
 
-/*
-UInventoryDataEntryContainer::UInventoryDataEntryContainer()
-{
-	DataEntryContainer = FInventoryEntryDataContainer();
-}
-*/
-
 FInventoryEntryDataContainer UInventoryDataEntryContainer::SetDataEntryContainer(UTexture2D* ItemIcon, FString ItemName, int32 ItemQuantity)
 {	
 	DataEntryContainer.ItemIcon = ItemIcon;

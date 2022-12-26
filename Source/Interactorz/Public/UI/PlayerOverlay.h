@@ -15,10 +15,12 @@ class INTERACTORZ_API UPlayerOverlay : public UUserWidget
 {
 	GENERATED_BODY()	
 
-
 public:
 
+	UFUNCTION()
 	void SetInteractableInfoPanelVisible(FString InteractableNameToSet);
+
+	UFUNCTION()
 	void SetInteractableInfoPanelHidden(FString InteractableNameToRemove);
 
 private:

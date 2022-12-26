@@ -1,8 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "InGameHUD.h"
-#include "PlayerOverlay.h"
+#include "UI/InGameHUD.h"
+#include "Components/WidgetSwitcher.h"
+#include "UI/PlayerOverlay.h"
 #include "UI/InGameMenu.h"
 #include "PlayerCharacter.h"
 
@@ -10,18 +11,21 @@ void AInGameHUD::BeginPlay()
 {
 	Super::BeginPlay();
 
-	APlayerController* Controller = GetWorld()->GetFirstPlayerController();
-	HUDOwner = Cast<APlayerCharacter>(Controller->GetPawn());
+	GetWorld()->GetFirstPlayerController();
+	PlayerController = GetWorld()->GetFirstPlayerController();
+	HUDOwner = Cast<APlayerCharacter>(PlayerController->GetPawn());
 	
-	if (Controller == nullptr || PlayerOverlayClass == nullptr) return;
+	if (PlayerController == nullptr || PlayerOverlayClass == nullptr) return;
 
-	PlayerOverlay = CreateWidget<UPlayerOverlay>(Controller, PlayerOverlayClass);
+	PlayerOverlay = CreateWidget<UPlayerOverlay>(PlayerController, PlayerOverlayClass);
 	PlayerOverlay->AddToViewport();
 	PlayerOverlay->SetInteractableInfoPanelHidden(FString());
 
-	InGameMenu = CreateWidget<UInGameMenu>(Controller, InGameMenuClass);
+	InGameMenu = CreateWidget<UInGameMenu>(PlayerController, InGameMenuClass);
 	InGameMenu->AddToViewport();
 	InGameMenu->SetMainPanelHidden();
+
+	PlayerController->SetShowMouseCursor(false);
 
 	if (HUDOwner == nullptr) return;
 
@@ -45,12 +49,18 @@ void AInGameHUD::HideInteractableInfo(FString InteractableName)
 
 void AInGameHUD::OpenMenu(bool bIsOpening)
 {
+	if (PlayerController == nullptr) return;
+	
 	if (!bIsOpening)
 	{
+		//PlayerController->SetInputMode(FInputModeUIOnly());
+		PlayerController->SetShowMouseCursor(false);
 		InGameMenu->ClearInventoryList();
 		return;
 	}
 
+	//PlayerController->SetInputMode(FInputModeGameOnly());
+	PlayerController->SetShowMouseCursor(true);
 	InGameMenu->DisplayInventoryList();
 	InGameMenu->SetMainPanelVisible();
 }

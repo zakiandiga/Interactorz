@@ -10,7 +10,7 @@ class UCanvasPanel;
 class UListView;
 class UInventory;
 class UInventoryListEntry;
-
+class UWidgetSwitcher;
 UCLASS()
 class INTERACTORZ_API UInGameMenu : public UUserWidget
 {
@@ -23,17 +23,18 @@ public:
 	void DisplayInventoryList();
 
 	UFUNCTION(BlueprintImplementableEvent)
-		void OnDisplayingInventoryList(const TArray<class UInventoryDataEntryContainer*>& DataContainer);
+	void OnDisplayingInventoryList(const TArray<class UInventoryDataEntryContainer*>& DataContainer);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void ClearInventoryList();
 
 	void SetOwnerInventory(UInventory* InventoryToSet) { OwnerInventory = InventoryToSet; }
 
-
-
 	UPROPERTY(BlueprintReadOnly, Category = "Inventory")
 	UInventory* OwnerInventory;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget), Category = "UI | Inventory")
+	UWidgetSwitcher* MenuSwitcher;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget), Category = "UI | Inventory")
 	UCanvasPanel* MainPanel;

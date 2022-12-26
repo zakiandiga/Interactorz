@@ -19,8 +19,10 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void AddToInventory(UDA_ItemData* ItemToAdd, int32 QuantityToAdd);
 
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void RemoveFromInventory(UDA_ItemData* ItemToRemove, int32 QuantityToRemove);	
 
 	UFUNCTION(BlueprintPure, Category = "Inventory")
