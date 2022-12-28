@@ -10,7 +10,6 @@
 class UImage;
 class UCanvasPanel;
 class UTextBlock;
-//class IUserObjectListEntry;
 
 UCLASS()
 class INTERACTORZ_API UInventoryListEntry : public UUserWidget, public IUserObjectListEntry
@@ -19,7 +18,7 @@ class INTERACTORZ_API UInventoryListEntry : public UUserWidget, public IUserObje
 	
 protected:
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
-	
+
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	UImage* ItemIcon;
 

@@ -2,11 +2,10 @@
 
 
 #include "UI/InventoryDataEntryContainer.h"
+#include "DA_ItemData.h"
 
-FInventoryEntryDataContainer UInventoryDataEntryContainer::SetDataEntryContainer(UTexture2D* ItemIcon, FString ItemName, int32 ItemQuantity)
+void UInventoryDataEntryContainer::SetDataEntryContainer(UDA_ItemData* ItemData, int32 ItemQuantity)
 {	
-	DataEntryContainer.ItemIcon = ItemIcon;
-	DataEntryContainer.ItemName = ItemName;
-	DataEntryContainer.ItemQuantity = ItemQuantity;
-	return DataEntryContainer;
+	InventoryDataContainer.Item = ItemData;
+	InventoryDataContainer.ItemQuantity = ItemQuantity;
 }

@@ -39,6 +39,7 @@ void AInGameHUD::BeginPlay()
 
 void AInGameHUD::DisplayInteractableInfo(FString InteractableName)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Displaying interactrable: %s"), *InteractableName);
 	PlayerOverlay->SetInteractableInfoPanelVisible(InteractableName);
 }
 
@@ -56,6 +57,7 @@ void AInGameHUD::OpenMenu(bool bIsOpening)
 		//PlayerController->SetInputMode(FInputModeUIOnly());
 		PlayerController->SetShowMouseCursor(false);
 		InGameMenu->ClearInventoryList();
+		InGameMenu->SetMainPanelHidden();
 		return;
 	}
 
