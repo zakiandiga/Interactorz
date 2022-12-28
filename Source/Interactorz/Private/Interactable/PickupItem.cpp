@@ -11,12 +11,18 @@ APickupItem::APickupItem()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	ItemSprite = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Item Sprite"));
 	ItemData = CreateDefaultSubobject<UDA_ItemData>(TEXT("Item Info"));
+	ItemSprite = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Item Sprite"));
 	
 	SetRootComponent(ItemSprite);
 	
+	ItemSprite->SetStaticMesh(ItemData == nullptr ? nullptr : ItemData->ItemData.PickUpSprite);
 	ItemSprite->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Overlap);
+}
+
+void APickupItem::BeginPlay()
+{
+	Super::BeginPlay();
 }
 
 bool APickupItem::CanInteract(const AActor* InteractingActor)
@@ -38,14 +44,24 @@ void APickupItem::Interact(AActor* InteractingActor)
 	}
 
 	InteractingInventory->AddToInventory(ItemData, ItemQuantity);
-	UE_LOG(LogTemp, Warning, TEXT("%d of %s added to the %s"), ItemQuantity, *ItemData->ItemInfo.Name, *InteractingInventory->GetOwner()->GetActorNameOrLabel());
+	UE_LOG(LogTemp, Warning, TEXT("%d of %s added to the %s"), ItemQuantity, *ItemData->ItemData.Name, *InteractingInventory->GetOwner()->GetActorNameOrLabel());
 	InventoryOwner->OnItemTransferSuccess();
 	Destroy();
 }
 
 FString APickupItem::GetInteractableName()
 {
-	return ItemData->ItemInfo.Name;
+	return ItemData->ItemData.Name;
+}
+
+
+
+void APickupItem::SpawnInit(UDA_ItemData* ItemDataToSet, int32 QuantityToSet)
+{
+	ItemData = ItemDataToSet;
+	ItemSprite->SetStaticMesh(ItemDataToSet->ItemData.PickUpSprite);
+	ItemQuantity = QuantityToSet;
+
 }
 
 

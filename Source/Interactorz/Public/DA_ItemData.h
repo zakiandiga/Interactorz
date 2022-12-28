@@ -17,7 +17,7 @@ enum class EItemType : uint8
 };
 
 USTRUCT(BlueprintType)
-struct FItemInfo
+struct FItemData
 {
 	GENERATED_USTRUCT_BODY()
 
@@ -35,6 +35,9 @@ struct FItemInfo
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	EItemType ItemType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UStaticMesh* PickUpSprite;
 };
 
 UCLASS(BlueprintType)
@@ -45,7 +48,7 @@ class INTERACTORZ_API UDA_ItemData : public UDataAsset
 public:
 
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
-	FItemInfo ItemInfo;
+	FItemData ItemData;
 	
 };
 

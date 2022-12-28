@@ -22,10 +22,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Interact(AActor* InteractingActor) override;
 
-	UFUNCTION(BlueprintCallable, Category = "Interactable")
-	FString GetInteractableName() override;
-
 private:
+	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "Components")
 	UStaticMeshComponent* ItemSprite;
@@ -37,5 +35,14 @@ private:
 	int32 ItemQuantity = 1;
 
 	TSubclassOf<AActor*> Player;
+
+	bool bCreatedFromSpawn = false;
+
+
+public:
+
+	UFUNCTION(BlueprintCallable, Category = "Interactable")
+	FString GetInteractableName() override;
 	
+	void SpawnInit(UDA_ItemData* ItemDataToSet, int32 QuantityToSet);
 };

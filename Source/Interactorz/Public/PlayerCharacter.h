@@ -70,11 +70,6 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Player Interaction")
 	float InteractLineTraceLength = 500.f;
 
-	void MoveForward(float Value);
-	void MoveSide(float Value);
-	void Turn(float Value);
-	void LookUp(float Value);
-	void Action01();
 	void ToggleMenu();
 	void TracingForInteractable();
 	void AssignInteractable(IInteractable* InteractableToAssign);
@@ -87,6 +82,11 @@ public:
 	virtual void OnItemTransferSuccess() override;
 	virtual void OnItemTransferFailed() override;
 
+	void MoveForward(float Value);
+	void MoveSide(float Value);
+	void Turn(float Value);
+	void LookUp(float Value);
+	void Action01();
 	UFUNCTION(BlueprintPure, Category = "Inventory")
 	FORCEINLINE UInventory* GetActorInventory() const { return PlayerInventory; }
 

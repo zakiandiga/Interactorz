@@ -11,6 +11,7 @@ class UListView;
 class UInventory;
 class UInventoryListEntry;
 class UWidgetSwitcher;
+
 UCLASS()
 class INTERACTORZ_API UInGameMenu : public UUserWidget
 {
@@ -21,12 +22,17 @@ public:
 	void SetMainPanelHidden();
 
 	void DisplayInventoryList();
+	void ClearInventoryList();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnDisplayingInventoryList(const TArray<class UInventoryDataEntryContainer*>& DataContainer);
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void ClearInventoryList();
+	//UFUNCTION(BlueprintImplementableEvent)
+
+	UFUNCTION(BlueprintCallable)
+	void OnListViewClicked(UObject* ClickedObject);
+
+	void DropItem(UInventoryDataEntryContainer* ItemToProcess);
 
 	void SetOwnerInventory(UInventory* InventoryToSet) { OwnerInventory = InventoryToSet; }
 
@@ -45,7 +51,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget), Category = "UI | Inventory")
 	UListView* InventoryList;
 
-	UPROPERTY(BlueprintReadWrite, Category = "UI | Inventory")
-	TArray<UInventoryDataEntryContainer*> DataContainersToDisplay = TArray<UInventoryDataEntryContainer*>();
+	
+
+	//UPROPERTY(BlueprintReadWrite, Category = "UI | Inventory")
+	//TArray<UInventoryDataEntryContainer*> DataContainersToDisplay = TArray<UInventoryDataEntryContainer*>();
 
 };

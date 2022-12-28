@@ -11,19 +11,16 @@ class UImage;
 class UTextBlock;
 
 USTRUCT(Blueprintable)
-struct FInventoryEntryDataContainer
+struct FInventoryDataContainer
 {
 	GENERATED_USTRUCT_BODY()
 
-	UPROPERTY(BlueprintReadWrite, Category = "UI | Inventory")
-	UTexture2D* ItemIcon;
 
 	UPROPERTY(BlueprintReadWrite, Category = "UI | Inventory")
-	FString ItemName;
-
+	UDA_ItemData* Item;
+		
 	UPROPERTY(BlueprintReadWrite, Category = "UI | Inventory")
 	int32 ItemQuantity;
-		
 };
 	
 UCLASS(Blueprintable, BlueprintType)
@@ -34,8 +31,14 @@ class INTERACTORZ_API UInventoryDataEntryContainer : public UObject
 public:
 	
 	UPROPERTY(BlueprintReadWrite, Category = "UI | Inventory")
-	FInventoryEntryDataContainer DataEntryContainer;
+	FInventoryDataContainer InventoryDataContainer;
 
 	UFUNCTION(BlueprintCallable, Category = "UI | Inventory")
-	FInventoryEntryDataContainer SetDataEntryContainer(UTexture2D* ItemIcon, FString ItemName, int32 ItemQuantity);
+	void SetDataEntryContainer(UDA_ItemData* ItemData, int32 ItemQuantity);
+
+	UFUNCTION()
+	FInventoryDataContainer GetDataEntryContainer() { return InventoryDataContainer; }
+
+	UFUNCTION()
+	void SetDataQuantity(int32 NewQuantity) { InventoryDataContainer.ItemQuantity = NewQuantity; }
 };
