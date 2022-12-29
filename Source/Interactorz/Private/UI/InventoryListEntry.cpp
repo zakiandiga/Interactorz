@@ -14,7 +14,7 @@ void UInventoryListEntry::NativeOnListItemObjectSet(UObject* ListItemObject)
 {
 	UInventoryDataEntryContainer* Item = Cast<UInventoryDataEntryContainer>(ListItemObject);
 	
-	ItemIcon->SetBrushFromTexture(Item->InventoryDataContainer.Item->ItemData.Icon, false);
-	NameText->SetText(FText::FromString(Item->InventoryDataContainer.Item->ItemData.Name));
-	QuantityText->SetText(FText::FromString(FString::FromInt(Item->InventoryDataContainer.ItemQuantity)));	
+	ItemIcon->SetBrushFromTexture(Item->GetDataEntryContainer().Item->ItemData.Icon, false);
+	NameText->SetText(FText::FromString(Item->GetDataEntryContainer().Item->ItemData.Name));
+	QuantityText->SetText(FText::FromString(FString::FromInt(Item->GetDataEntryContainer().ItemQuantity)));
 }

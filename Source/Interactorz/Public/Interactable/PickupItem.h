@@ -16,14 +16,7 @@ class INTERACTORZ_API APickupItem : public AActor, public IInteractable
 public:
 	APickupItem();
 
-	UFUNCTION(BlueprintCallable)
-	bool CanInteract(const AActor* InteractingActor) override;
-
-	UFUNCTION(BlueprintCallable)
-	void Interact(AActor* InteractingActor) override;
-
 private:
-	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "Components")
 	UStaticMeshComponent* ItemSprite;
@@ -41,8 +34,15 @@ private:
 
 public:
 
-	UFUNCTION(BlueprintCallable, Category = "Interactable")
-	FString GetInteractableName() override;
+	//review if CanInteract still needed
+	UFUNCTION(BlueprintCallable)
+	bool CanInteract(const AActor* InteractingActor) override;
+
+	UFUNCTION(BlueprintCallable)
+	void Interact(AActor* InteractingActor) override;
 	
-	void SpawnInit(UDA_ItemData* ItemDataToSet, int32 QuantityToSet);
+	void SpawnInitialize(UDA_ItemData* ItemDataToSet, int32 QuantityToSet);
+	UFUNCTION(BlueprintCallable, Category = "Interactable")
+
+	FString GetInteractableName() override;
 };

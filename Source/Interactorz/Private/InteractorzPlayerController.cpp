@@ -38,7 +38,7 @@ void AInteractorzPlayerController::UINavigateVertical(float Value)
 
 	if (PossessedPawn->GetPlayerMoveStates() == EPlayerControlStates::EPC_OnCharacter)
 	{
-		PossessedPawn->MoveForward(Value);
+		//PossessedPawn->MoveForward(Value);
 	}
 
 	else if (PossessedPawn->GetPlayerMoveStates() == EPlayerControlStates::EPC_OnMenu)

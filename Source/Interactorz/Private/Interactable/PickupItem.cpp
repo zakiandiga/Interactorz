@@ -17,17 +17,13 @@ APickupItem::APickupItem()
 	SetRootComponent(ItemSprite);
 	
 	ItemSprite->SetStaticMesh(ItemData == nullptr ? nullptr : ItemData->ItemData.PickUpSprite);
+	ItemSprite->SetSimulatePhysics(true);
 	ItemSprite->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Overlap);
-}
-
-void APickupItem::BeginPlay()
-{
-	Super::BeginPlay();
 }
 
 bool APickupItem::CanInteract(const AActor* InteractingActor)
 {
-	return true; // InteractingActor == GetCurrentInteractableActor();
+	return true;
 }
 
 void APickupItem::Interact(AActor* InteractingActor)
@@ -43,25 +39,24 @@ void APickupItem::Interact(AActor* InteractingActor)
 		return;
 	}
 
-	InteractingInventory->AddToInventory(ItemData, ItemQuantity);
+	InteractingInventory->ProcessItem(EItemProcessType::EIP_Retrieve, ItemData, ItemQuantity);
 	UE_LOG(LogTemp, Warning, TEXT("%d of %s added to the %s"), ItemQuantity, *ItemData->ItemData.Name, *InteractingInventory->GetOwner()->GetActorNameOrLabel());
 	InventoryOwner->OnItemTransferSuccess();
 	Destroy();
 }
 
-FString APickupItem::GetInteractableName()
+void APickupItem::SpawnInitialize(UDA_ItemData* ItemDataToSet, int32 QuantityToSet)
 {
-	return ItemData->ItemData.Name;
-}
+	if (ItemDataToSet == nullptr) return;
 
-
-
-void APickupItem::SpawnInit(UDA_ItemData* ItemDataToSet, int32 QuantityToSet)
-{
 	ItemData = ItemDataToSet;
 	ItemSprite->SetStaticMesh(ItemDataToSet->ItemData.PickUpSprite);
 	ItemQuantity = QuantityToSet;
+}
 
+FString APickupItem::GetInteractableName()
+{
+	return ItemData->ItemData.Name;
 }
 
 

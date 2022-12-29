@@ -24,19 +24,10 @@ public:
 	void DisplayInventoryList();
 	void ClearInventoryList();
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnDisplayingInventoryList(const TArray<class UInventoryDataEntryContainer*>& DataContainer);
-
-	//UFUNCTION(BlueprintImplementableEvent)
-
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "UI | Inventory")
 	void OnListViewClicked(UObject* ClickedObject);
-
-	void DropItem(UInventoryDataEntryContainer* ItemToProcess);
-
-	void SetOwnerInventory(UInventory* InventoryToSet) { OwnerInventory = InventoryToSet; }
-
-	UPROPERTY(BlueprintReadOnly, Category = "Inventory")
+	
+	UPROPERTY(BlueprintReadOnly, Category = "UI | Inventory")
 	UInventory* OwnerInventory;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget), Category = "UI | Inventory")
@@ -51,9 +42,5 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget), Category = "UI | Inventory")
 	UListView* InventoryList;
 
-	
-
-	//UPROPERTY(BlueprintReadWrite, Category = "UI | Inventory")
-	//TArray<UInventoryDataEntryContainer*> DataContainersToDisplay = TArray<UInventoryDataEntryContainer*>();
-
+	FORCEINLINE void SetOwnerInventory(UInventory* InventoryToSet) { OwnerInventory = InventoryToSet; }
 };

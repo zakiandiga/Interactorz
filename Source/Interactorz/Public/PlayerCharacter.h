@@ -36,9 +36,7 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	virtual void Jump() override;
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;	
 
 private:	
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Components")
@@ -76,17 +74,18 @@ private:
 	void ClearInteractable();
 	void FaceInteractable();
 
+	void MoveForward(float Value);
+	void MoveSide(float Value);
+	void Turn(float Value);
+	void LookUp(float Value);
+	void Action01();
+	virtual void Jump() override;
 
 public:
 
 	virtual void OnItemTransferSuccess() override;
 	virtual void OnItemTransferFailed() override;
 
-	void MoveForward(float Value);
-	void MoveSide(float Value);
-	void Turn(float Value);
-	void LookUp(float Value);
-	void Action01();
 	UFUNCTION(BlueprintPure, Category = "Inventory")
 	FORCEINLINE UInventory* GetActorInventory() const { return PlayerInventory; }
 

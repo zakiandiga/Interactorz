@@ -48,7 +48,7 @@ private:
 	void RestartRespawnTimer(AActor* DestroyedActor);
 
 	UFUNCTION()
-	FORCEINLINE float GetRespawnTime() { return MinRespawnTime == MaxRespawnTime ? MinRespawnTime : FMath::FRandRange(MinRespawnTime, MaxRespawnTime); }
+	float GetRespawnTime() { return MinRespawnTime == MaxRespawnTime ? MinRespawnTime : FMath::FRandRange(MinRespawnTime, MaxRespawnTime); }
 
 public:
 

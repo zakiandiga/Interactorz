@@ -28,11 +28,13 @@ class INTERACTORZ_API UInventoryDataEntryContainer : public UObject
 {
 	GENERATED_BODY()
 
-public:
-	
-	UPROPERTY(BlueprintReadWrite, Category = "UI | Inventory")
+private:
+
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"), Category = "UI | Inventory")
 	FInventoryDataContainer InventoryDataContainer;
 
+public:
+	
 	UFUNCTION(BlueprintCallable, Category = "UI | Inventory")
 	void SetDataEntryContainer(UDA_ItemData* ItemData, int32 ItemQuantity);
 
