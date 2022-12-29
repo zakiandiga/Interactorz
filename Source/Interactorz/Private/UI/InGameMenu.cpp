@@ -49,7 +49,7 @@ void UInGameMenu::OnListViewClicked(UObject* ClickedObject)
 	int32 CurrentQuantity = ItemToProcess->GetDataEntryContainer().ItemQuantity;
 	CurrentQuantity -= 1;
 
-	//Drop item for now
+	//Drop item for now, should be called from a command button groups that appear when the entry clicked
 	OwnerInventory->ProcessItem(EItemProcessType::EIP_Drop, ItemToProcess->GetDataEntryContainer().Item, 1);
 
 	ClearInventoryList();
