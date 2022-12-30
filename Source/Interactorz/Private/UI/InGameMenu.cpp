@@ -20,6 +20,7 @@ void UInGameMenu::SetMainPanelHidden()
 	MainPanel->SetVisibility(ESlateVisibility::Hidden);	
 }
 
+
 void UInGameMenu::DisplayInventoryList()
 {
 	if (OwnerInventory == nullptr) return;
@@ -46,11 +47,11 @@ void UInGameMenu::OnListViewClicked(UObject* ClickedObject)
 
 	if (ItemToProcess == nullptr) return;
 
-	int32 CurrentQuantity = ItemToProcess->GetDataEntryContainer().ItemQuantity;
+	int32 CurrentQuantity = ItemToProcess->GetItemData().ItemQuantity;
 	CurrentQuantity -= 1;
 
 	//Drop item for now, should be called from a command button groups that appear when the entry clicked
-	OwnerInventory->ProcessItem(EItemProcessType::EIP_Drop, ItemToProcess->GetDataEntryContainer().Item, 1);
+	OwnerInventory->ProcessItem(EItemProcessType::EIP_Drop, ItemToProcess->GetItemData().Item, 1);
 
 	ClearInventoryList();
 	DisplayInventoryList();

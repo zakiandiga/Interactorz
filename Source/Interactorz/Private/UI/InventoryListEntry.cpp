@@ -12,9 +12,11 @@
 
 void UInventoryListEntry::NativeOnListItemObjectSet(UObject* ListItemObject)
 {
-	UInventoryDataEntryContainer* Item = Cast<UInventoryDataEntryContainer>(ListItemObject);
+	UInventoryDataEntryContainer* ItemDataContainer = Cast<UInventoryDataEntryContainer>(ListItemObject);
 	
-	ItemIcon->SetBrushFromTexture(Item->GetDataEntryContainer().Item->ItemData.Icon, false);
-	NameText->SetText(FText::FromString(Item->GetDataEntryContainer().Item->ItemData.Name));
-	QuantityText->SetText(FText::FromString(FString::FromInt(Item->GetDataEntryContainer().ItemQuantity)));
+	Item = ItemDataContainer->GetItemData().Item;
+
+	ItemIcon->SetBrushFromTexture(Item->ItemData.Icon, false);
+	NameText->SetText(FText::FromString(Item->ItemData.Name));
+	QuantityText->SetText(FText::FromString(FString::FromInt(ItemDataContainer->GetItemData().ItemQuantity)));
 }

@@ -39,7 +39,7 @@ public:
 	void SetDataEntryContainer(UDA_ItemData* ItemData, int32 ItemQuantity);
 
 	UFUNCTION()
-	FInventoryDataContainer GetDataEntryContainer() { return InventoryDataContainer; }
+	FInventoryDataContainer GetItemData() { return InventoryDataContainer; }
 
 	UFUNCTION()
 	void SetDataQuantity(int32 NewQuantity) { InventoryDataContainer.ItemQuantity = NewQuantity; }
