@@ -3,6 +3,7 @@
 #include "UI/InGameMenu.h"
 #include "UI/InventoryListEntry.h"
 #include "UI/InventoryDataEntryContainer.h"
+#include "UI/WIWidgetSwitcher.h"
 #include "Components/CanvasPanel.h"
 #include "Components/WidgetSwitcher.h"
 #include "Components/ListView.h"
@@ -13,49 +14,11 @@
 void UInGameMenu::SetMainPanelVisible()
 {
 	MainPanel->SetVisibility(ESlateVisibility::Visible);
+	PageSwitcher->OnPanelVisible(true);
 }
 
 void UInGameMenu::SetMainPanelHidden()
 {
 	MainPanel->SetVisibility(ESlateVisibility::Hidden);	
+	PageSwitcher->OnPanelVisible(false);
 }
-
-void UInGameMenu::DisplayInventoryList()
-{
-	if (OwnerInventory == nullptr) return;
-
-	for (TPair<UDA_ItemData*, int32>& item : OwnerInventory->GetActiveInventory())
-	{
-		if (item.Key == nullptr) return;
-
-		UDA_ItemData* itemData = item.Key;
-		UInventoryDataEntryContainer* DataContainer = NewObject<UInventoryDataEntryContainer>();
-		DataContainer->SetDataEntryContainer(itemData, item.Value);
-		InventoryList->AddItem(DataContainer);
-	}
-}
-
-void UInGameMenu::ClearInventoryList()
-{
-	InventoryList->ClearListItems();
-}
-
-void UInGameMenu::OnListViewClicked(UObject* ClickedObject)
-{	
-	UInventoryDataEntryContainer* ItemToProcess = Cast<UInventoryDataEntryContainer>(ClickedObject);
-
-	if (ItemToProcess == nullptr) return;
-
-	int32 CurrentQuantity = ItemToProcess->GetDataEntryContainer().ItemQuantity;
-	CurrentQuantity -= 1;
-
-	//Drop item for now, should be called from a command button groups that appear when the entry clicked
-	OwnerInventory->ProcessItem(EItemProcessType::EIP_Drop, ItemToProcess->GetDataEntryContainer().Item, 1);
-
-	ClearInventoryList();
-	DisplayInventoryList();
-}
-
-
-
-

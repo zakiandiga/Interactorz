@@ -10,8 +10,9 @@ class UCanvasPanel;
 class UListView;
 class UInventory;
 class UInventoryListEntry;
-class UWidgetSwitcher;
+class UWIWidgetSwitcher;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMenuCreated, UInGameMenu*, Root);
 UCLASS()
 class INTERACTORZ_API UInGameMenu : public UUserWidget
 {
@@ -20,27 +21,18 @@ class INTERACTORZ_API UInGameMenu : public UUserWidget
 public:
 	void SetMainPanelVisible();
 	void SetMainPanelHidden();
-
-	void DisplayInventoryList();
-	void ClearInventoryList();
-
-	UFUNCTION(BlueprintCallable, Category = "UI | Inventory")
-	void OnListViewClicked(UObject* ClickedObject);
 	
 	UPROPERTY(BlueprintReadOnly, Category = "UI | Inventory")
 	UInventory* OwnerInventory;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget), Category = "UI | Inventory")
-	UWidgetSwitcher* MenuSwitcher;
+	UWIWidgetSwitcher* PageSwitcher;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget), Category = "UI | Inventory")
 	UCanvasPanel* MainPanel;
 
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget), Category = "UI | Inventory")
-	UCanvasPanel* InventoryPanel;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget), Category = "UI | Inventory")
-	UListView* InventoryList;
-
+	FORCEINLINE UInventory* GetOwnerInventory() { return OwnerInventory; }
 	FORCEINLINE void SetOwnerInventory(UInventory* InventoryToSet) { OwnerInventory = InventoryToSet; }
+
+	FOnMenuCreated OnMenuCreated;
 };

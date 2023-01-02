@@ -11,12 +11,20 @@ void AInGameHUD::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetWorld()->GetFirstPlayerController();
 	PlayerController = GetWorld()->GetFirstPlayerController();
-	HUDOwner = Cast<APlayerCharacter>(PlayerController->GetPawn());
 	
 	if (PlayerController == nullptr || PlayerOverlayClass == nullptr) return;
 
+	HUDOwner = Cast<APlayerCharacter>(PlayerController->GetPawn());
+	
+	if (HUDOwner == nullptr) return;
+
+	CreateMainUI();
+	BindPlayerActions();
+}
+
+void AInGameHUD::CreateMainUI()
+{
 	PlayerOverlay = CreateWidget<UPlayerOverlay>(PlayerController, PlayerOverlayClass);
 	PlayerOverlay->AddToViewport();
 	PlayerOverlay->SetInteractableInfoPanelHidden(FString());
@@ -25,21 +33,22 @@ void AInGameHUD::BeginPlay()
 	InGameMenu->AddToViewport();
 	InGameMenu->SetMainPanelHidden();
 
-	PlayerController->SetShowMouseCursor(false);
-
-	if (HUDOwner == nullptr) return;
+	PlayerController->SetShowMouseCursor(false); //Should be set somewhere else
 
 	InGameMenu->SetOwnerInventory(HUDOwner->GetActorInventory());
+	InGameMenu->OnMenuCreated.Broadcast(InGameMenu);
+}
 
+void AInGameHUD::BindPlayerActions()
+{
 	HUDOwner->OnInteractableFound.AddDynamic(this, &AInGameHUD::DisplayInteractableInfo);
 	HUDOwner->OnInteractableGone.AddDynamic(this, &AInGameHUD::HideInteractableInfo);
-
 	HUDOwner->OnPlayerOpeningMenu.AddDynamic(this, &AInGameHUD::OpenMenu);
 }
 
 void AInGameHUD::DisplayInteractableInfo(FString InteractableName)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Displaying interactrable: %s"), *InteractableName);
+	//UE_LOG(LogTemp, Warning, TEXT("Displaying interactrable: %s"), *InteractableName);
 	PlayerOverlay->SetInteractableInfoPanelVisible(InteractableName);
 }
 
@@ -56,13 +65,11 @@ void AInGameHUD::OpenMenu(bool bIsOpening)
 	{
 		//PlayerController->SetInputMode(FInputModeUIOnly());
 		PlayerController->SetShowMouseCursor(false);
-		InGameMenu->ClearInventoryList();
 		InGameMenu->SetMainPanelHidden();
 		return;
 	}
 
 	//PlayerController->SetInputMode(FInputModeGameOnly());
-	PlayerController->SetShowMouseCursor(true);
-	InGameMenu->DisplayInventoryList();
+	//PlayerController->SetShowMouseCursor(true);
 	InGameMenu->SetMainPanelVisible();
 }
