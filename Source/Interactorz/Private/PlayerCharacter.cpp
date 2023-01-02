@@ -187,6 +187,7 @@ void APlayerCharacter::ToggleMenu()
 	case EPlayerControlStates::EPC_OnCharacter:
 		UGameplayStatics::SetGlobalTimeDilation(this, 0.f);
 		OnPlayerOpeningMenu.Broadcast(true);
+		Cast<APlayerController>(Controller)->bShowMouseCursor = true;
 		PlayerControlState = EPlayerControlStates::EPC_OnMenu;
 		break;
 	case EPlayerControlStates::EPC_Interacting:

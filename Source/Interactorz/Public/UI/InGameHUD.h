@@ -10,6 +10,7 @@ class UPlayerOverlay;
 class UInGameMenu;
 class APlayerCharacter;
 class UUserWidget;
+
 UCLASS()
 class INTERACTORZ_API AInGameHUD : public AHUD
 {
@@ -37,6 +38,10 @@ private:
 	UPROPERTY()
 	UInGameMenu* InGameMenu;
 
+	void CreateMainUI();
+
+	void BindPlayerActions();
+	
 	UFUNCTION()
 	void DisplayInteractableInfo(FString InteractableName);
 
@@ -45,5 +50,6 @@ private:
 
 	UFUNCTION()
 	void OpenMenu(bool bIsOpening);
+
 	
 };

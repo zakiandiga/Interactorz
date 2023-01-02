@@ -15,14 +15,18 @@ void AInteractorzPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	PossessedPawn = Cast<APlayerCharacter>(GetPawn());
+
+	//set mouse cursor state according to player opening/closing menu
 }
 
 void AInteractorzPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	//InputComponent->BindAxis("Forward", this, &AInteractorzPlayerController::UINavigateVertical);
-	//InputComponent->BindAxis("Right", this, &AInteractorzPlayerController::UINavigateHorizontal);
+	
+
+	//InputComponent->BindAxis("UIMoveUp", this, &AInteractorzPlayerController::UINavigateVertical);
+	//InputComponent->BindAxis("UIMoveRight", this, &AInteractorzPlayerController::UINavigateHorizontal);
 	//InputComponent->BindAction("Confirm", IE_Pressed, this, &AInteractorzPlayerController::Confirm);
 	//InputComponent->BindAction("Cancel", IE_Pressed, this, &AInteractorzPlayerController::Cancel);
 
@@ -36,16 +40,8 @@ void AInteractorzPlayerController::UINavigateVertical(float Value)
 {
 	if (Value == 0) return;
 
-	if (PossessedPawn->GetPlayerMoveStates() == EPlayerControlStates::EPC_OnCharacter)
-	{
-		//PossessedPawn->MoveForward(Value);
-	}
 
-	else if (PossessedPawn->GetPlayerMoveStates() == EPlayerControlStates::EPC_OnMenu)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("NavigateVertical! %f"), Value);
-
-	}
+	UE_LOG(LogTemp, Warning, TEXT("NavigateVertical! %f"), Value);
 }
 
 void AInteractorzPlayerController::UINavigateHorizontal(float Value)
