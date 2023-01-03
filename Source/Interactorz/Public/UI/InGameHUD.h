@@ -51,5 +51,7 @@ private:
 	UFUNCTION()
 	void OpenMenu(bool bIsOpening);
 
-	
+public:
+	UFUNCTION(BlueprintCallable, Category = "UI | Navigation")
+	void OpenMenuFromBP(bool bIsOpeningMenu);
 };

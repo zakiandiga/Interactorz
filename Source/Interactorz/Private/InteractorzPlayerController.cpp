@@ -16,6 +16,7 @@ void AInteractorzPlayerController::BeginPlay()
 
 	PossessedPawn = Cast<APlayerCharacter>(GetPawn());
 
+	
 	//set mouse cursor state according to player opening/closing menu
 }
 
@@ -23,7 +24,6 @@ void AInteractorzPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	
 
 	//InputComponent->BindAxis("UIMoveUp", this, &AInteractorzPlayerController::UINavigateVertical);
 	//InputComponent->BindAxis("UIMoveRight", this, &AInteractorzPlayerController::UINavigateHorizontal);

@@ -21,6 +21,8 @@ void AInGameHUD::BeginPlay()
 
 	CreateMainUI();
 	BindPlayerActions();
+
+	PlayerController->SetInputMode(FInputModeGameOnly());
 }
 
 void AInGameHUD::CreateMainUI()
@@ -33,7 +35,9 @@ void AInGameHUD::CreateMainUI()
 	InGameMenu->AddToViewport();
 	InGameMenu->SetMainPanelHidden();
 
+	PlayerController->SetInputMode(FInputModeGameOnly());
 	PlayerController->SetShowMouseCursor(false); //Should be set somewhere else
+	
 
 	InGameMenu->SetOwnerInventory(HUDOwner->GetActorInventory());
 	InGameMenu->OnMenuCreated.Broadcast(InGameMenu);
@@ -63,13 +67,19 @@ void AInGameHUD::OpenMenu(bool bIsOpening)
 	
 	if (!bIsOpening)
 	{
-		//PlayerController->SetInputMode(FInputModeUIOnly());
+		//PlayerController->SetInputMode(FInputModeGameOnly());
 		PlayerController->SetShowMouseCursor(false);
 		InGameMenu->SetMainPanelHidden();
 		return;
 	}
 
-	//PlayerController->SetInputMode(FInputModeGameOnly());
-	//PlayerController->SetShowMouseCursor(true);
+	//PlayerController->SetInputMode(FInputModeUIOnly());
+	PlayerController->SetShowMouseCursor(true);
 	InGameMenu->SetMainPanelVisible();
 }
+
+void AInGameHUD::OpenMenuFromBP(bool bIsOpeningMenu)
+{
+	OpenMenu(bIsOpeningMenu);
+}
+

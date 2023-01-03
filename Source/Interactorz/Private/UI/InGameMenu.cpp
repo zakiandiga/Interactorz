@@ -22,3 +22,5 @@ void UInGameMenu::SetMainPanelHidden()
 	MainPanel->SetVisibility(ESlateVisibility::Hidden);	
 	PageSwitcher->OnPanelVisible(false);
 }
+
+

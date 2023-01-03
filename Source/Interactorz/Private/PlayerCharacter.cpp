@@ -55,6 +55,8 @@ void APlayerCharacter::BeginPlay()
 	if (CurrentlyOverlappingActors.Num() <= 0) return;
 
 	bIsLineTracingForInteractable = true;
+
+	
 	
 }
 
@@ -88,6 +90,12 @@ void APlayerCharacter::Tick(float DeltaTime)
 	{
 		TracingForInteractable();
 	}
+
+	if (PlayerControlState == EPlayerControlStates::EPC_OnCharacter && !InputEnabled())
+	{
+		EnableInput(Cast<APlayerController>(Controller));
+
+	}
 }
 
 // Called to bind functionality to input
@@ -95,14 +103,19 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis(TEXT("Forward"), this, &APlayerCharacter::MoveForward);
-	PlayerInputComponent->BindAxis(TEXT("Right"), this, &APlayerCharacter::MoveSide);
-	PlayerInputComponent->BindAxis(TEXT("LookRight"), this, &APlayerCharacter::Turn);
-	PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &APlayerCharacter::LookUp);
+	FInputAxisBinding& Forward = PlayerInputComponent->BindAxis(TEXT("Forward"), this, &APlayerCharacter::MoveForward);
+	FInputAxisBinding& Right = PlayerInputComponent->BindAxis(TEXT("Right"), this, &APlayerCharacter::MoveSide);
+	FInputAxisBinding& LookRight = PlayerInputComponent->BindAxis(TEXT("LookRight"), this, &APlayerCharacter::Turn);
+	FInputAxisBinding& LookUp = PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &APlayerCharacter::LookUp);
 
-	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Jump);
-	PlayerInputComponent->BindAction(TEXT("Action01"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Action01);
-	PlayerInputComponent->BindAction(TEXT("Menu"), EInputEvent::IE_Pressed, this, &APlayerCharacter::ToggleMenu);
+	FInputActionBinding& Jump = PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Jump);
+	FInputActionBinding& Action01 = PlayerInputComponent->BindAction(TEXT("Action01"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Action01);
+	FInputActionBinding& Menu = PlayerInputComponent->BindAction(TEXT("Menu"), EInputEvent::IE_Pressed, this, &APlayerCharacter::ToggleMenu);
+	Forward.bConsumeInput = false;
+	Right.bConsumeInput = false;
+	LookRight.bConsumeInput = false;
+	LookUp.bConsumeInput = false;
+	Menu.bConsumeInput = false;
 }
 
 void APlayerCharacter::Jump()
@@ -180,14 +193,19 @@ void APlayerCharacter::ToggleMenu()
 	switch (PlayerControlState)
 	{
 	case EPlayerControlStates::EPC_OnMenu:
-		UGameplayStatics::SetGlobalTimeDilation(this, 1.f);
+		//UGameplayStatics::SetGlobalTimeDilation(this, 1.f);
 		OnPlayerOpeningMenu.Broadcast(false);
+		Controller->SetIgnoreLookInput(false);
+		Controller->SetIgnoreMoveInput(false);
+		//EnableInput(Cast<APlayerController>(Controller));
 		PlayerControlState = EPlayerControlStates::EPC_OnCharacter;
 		break;
 	case EPlayerControlStates::EPC_OnCharacter:
-		UGameplayStatics::SetGlobalTimeDilation(this, 0.f);
+		//UGameplayStatics::SetGlobalTimeDilation(this, 0.f);
 		OnPlayerOpeningMenu.Broadcast(true);
-		Cast<APlayerController>(Controller)->bShowMouseCursor = true;
+		Controller->SetIgnoreLookInput(true);
+		Controller->SetIgnoreMoveInput(true);
+		//DisableInput(Cast<APlayerController>(Controller));
 		PlayerControlState = EPlayerControlStates::EPC_OnMenu;
 		break;
 	case EPlayerControlStates::EPC_Interacting:
