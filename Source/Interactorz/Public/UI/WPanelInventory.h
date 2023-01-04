@@ -13,6 +13,7 @@ class UCanvasPanel;
 class UInventory;
 class UListView;
 class UInventoryListEntry;
+class UTextBlock;
 UCLASS()
 class INTERACTORZ_API UWPanelInventory : public UUserWidget, public IIUISwitcherListener
 {
@@ -22,6 +23,9 @@ class INTERACTORZ_API UWPanelInventory : public UUserWidget, public IIUISwitcher
 private:
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "UI | Inventory")
 	int32 SelectedInventoryListIndex = 0;
+
+	UPROPERTY()
+	UObject* SelectedItemFromInventory = nullptr;
 	
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "UI | Inventory")
 	UInventory* OwnerInventory;
@@ -38,6 +42,9 @@ public:
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget), Category = "UI | Inventory")
 	UListView* InventoryList;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget), Category = "UI | Inventory")
+	UTextBlock* DescriptionText;
 
 	void OnPageOpened_Implementation(UWidget* OpenedWidget) override;
 	void OnPageClosed_Implementation(UWidget* ClosedWidget) override;
@@ -63,7 +70,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI | Inventory")
 	void SetSelectedInventoryListIndex(const int32 TargetIndex) { SelectedInventoryListIndex = TargetIndex; }
 
+	UFUNCTION()
+	void SetSelectedItemFromInventory(UObject* SelectedItem) { SelectedItemFromInventory = SelectedItem; }
+
 	UFUNCTION(BlueprintPure, Category = "UI | Navigation")
 	int32 GetSelectedInventoryListIndex() const { return SelectedInventoryListIndex; }
+
+	UFUNCTION(BlueprintCallable, Category = "UI | Inventory")
+	void SetDescriptionText(UObject* ObjectToSet);
 	
 };

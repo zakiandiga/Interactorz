@@ -2,7 +2,7 @@
 
 
 #include "InteractorzPlayerController.h"
-#include "PlayerCharacter.h"
+#include "Character/PlayerCharacter.h"
 #include "GameFramework/PlayerController.h"
 
 AInteractorzPlayerController::AInteractorzPlayerController()
@@ -16,7 +16,8 @@ void AInteractorzPlayerController::BeginPlay()
 
 	PossessedPawn = Cast<APlayerCharacter>(GetPawn());
 
-	
+	FString Message = GetName();
+	UE_LOG(LogTemp, Warning, TEXT("PlayerController: %s"), *Message);
 	//set mouse cursor state according to player opening/closing menu
 }
 

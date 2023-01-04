@@ -2,7 +2,7 @@
 
 
 #include "Interactable/GatheringSpot.h"
-#include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "DA_ItemData.h"
 #include "Inventory.h"
 #include "Interfaces/InventoryOwner.h"
@@ -17,15 +17,9 @@ AGatheringSpot::AGatheringSpot()
 
 void AGatheringSpot::BeginPlay()
 {
+	HealthPoint = MaxHealthPoint;
 }
 
-void AGatheringSpot::BeginOverlapDelegate(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-}
-
-void AGatheringSpot::EndOverlapDelegate(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-}
 
 bool AGatheringSpot::CanInteract(const AActor* InteractingActor)
 {
@@ -39,9 +33,47 @@ bool AGatheringSpot::CanInteract(const AActor* InteractingActor)
 
 void AGatheringSpot::Interact(AActor* InteractingActor)
 {
+	CurrentItemQuantity = GetCurrentGatheringQuantity();
+
+	InventoryOwner = Cast<IInventoryOwner>(InteractingActor);
+	if (InventoryOwner == nullptr) return;
+
+	UInventory* InteractingInventory = InventoryOwner->GetActorInventory();
+	if (InteractingInventory == nullptr) return;
+
+	if (InteractingInventory->CheckSpaceAvailable() < CurrentItemQuantity)
+	{
+		InventoryOwner->OnItemTransferFailed();
+		return;
+	}
+
+	GetWorldTimerManager().SetTimer(GatheringTimer, this, &AGatheringSpot::OnGatheringDone, GatheringTime, false);
+
+}
+
+void AGatheringSpot::OnGatheringDone()
+{
+	InventoryOwner->GetActorInventory()->ProcessItem(EItemProcessType::EIP_Retrieve, ItemData, CurrentItemQuantity);
+	InventoryOwner->OnItemTransferSuccess();
+	InventoryOwner = nullptr;
+	CurrentItemQuantity = 0;
+
+	HealthPoint -= 1;
+
+	if (HealthPoint <= 0)
+	{
+		ItemMesh->SetVisibility(false, true);
+		GetWorldTimerManager().SetTimer(RespawnTimer, this, &AGatheringSpot::OnRespawn, RespawnTime, false);
+	}
+}
+
+void AGatheringSpot::OnRespawn()
+{
+	HealthPoint = MaxHealthPoint;
+	ItemMesh->SetVisibility(true, true);
 }
 
 FString AGatheringSpot::GetInteractableName()
 {
-	return FString();
+	return SpotName;
 }

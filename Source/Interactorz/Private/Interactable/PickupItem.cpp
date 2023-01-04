@@ -2,7 +2,6 @@
 
 
 #include "Interactable/PickupItem.h"
-#include "Components/SphereComponent.h"
 #include "DA_ItemData.h"
 #include "Inventory.h"
 #include "Interfaces/InventoryOwner.h"
@@ -29,6 +28,8 @@ bool APickupItem::CanInteract(const AActor* InteractingActor)
 void APickupItem::Interact(AActor* InteractingActor)
 {	
 	IInventoryOwner* InventoryOwner = Cast<IInventoryOwner>(InteractingActor);
+	if (InventoryOwner == nullptr) return;
+
 	UInventory* InteractingInventory = InventoryOwner->GetActorInventory();
 	if (InteractingInventory == nullptr) return;
 	

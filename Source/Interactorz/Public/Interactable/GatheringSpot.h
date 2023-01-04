@@ -7,6 +7,8 @@
 #include "GatheringSpot.generated.h"
 
 class UDA_ItemData;
+class IInventoryOwner;
+
 UCLASS()
 class INTERACTORZ_API AGatheringSpot : public AActor, public IInteractable
 {
@@ -18,10 +20,6 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	virtual void BeginOverlapDelegate(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	virtual void EndOverlapDelegate(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
-
 public:
 	UFUNCTION(BlueprintCallable)
 	bool CanInteract(const AActor* InteractingActor) override;
@@ -32,37 +30,57 @@ public:
 	FString GetInteractableName() override;
 
 private:
-
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = "true"), Category = "Item Data")
+	FString SpotName = FString();
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "Components")
-	UStaticMeshComponent* ItemMesh;
+	UStaticMeshComponent* ItemMesh = nullptr;
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Item Data")
-	UDA_ItemData* ItemData;
+	UDA_ItemData* ItemData = nullptr;
+
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Item Data")
+	int32 HealthPoint = 1;
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Item Data")
-	int32 GatheringLimit = 1;
+	int32 MaxHealthPoint = 10;
+
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = "true"), Category = "Item Data")
+	float GatheringTime = 2.f;
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Item Data")
-	int32 MinimumItemGained = 1;
+	int32 MinimumGatheringQuantity = 1;
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Item Data")
-	int32 MaximumItemGained = 1;
+	int32 MaximumGatheringQuantity = 1;
+
+	int32 CurrentItemQuantity;
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Item Data")
 	bool bCanRespawn = false;
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Item Data")
-	float RespawnTime = 1.f;
+	float RespawnTime = 10.f;
 
 	bool bIsGatherable = false;
 
-	TSubclassOf<AActor*> Player;
+	IInventoryOwner* InventoryOwner = nullptr;
+
+	FTimerHandle GatheringTimer;
+	FTimerHandle RespawnTimer;
+
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	void OnGatheringDone();
+
+	UFUNCTION(BlueprintCallable, Category = "respawn")
+	void OnRespawn();
 
 public:
-	UFUNCTION(BlueprintPure)
-	FORCEINLINE int32 GetItemGainedAmount() const { return MinimumItemGained != MaximumItemGained ? FMath::RandRange(MinimumItemGained, MaximumItemGained) : MaximumItemGained; }
 	
 	UFUNCTION(BlueprintPure)
-	FORCEINLINE int32 GetGatheringLimit() const { return GatheringLimit; }
+	FORCEINLINE int32 GetCurrentGatheringQuantity() const { return MinimumGatheringQuantity != MaximumGatheringQuantity ? FMath::RandRange(MinimumGatheringQuantity, MaximumGatheringQuantity) : MaximumGatheringQuantity; }
+	
+	UFUNCTION(BlueprintPure)
+	FORCEINLINE int32 GetHealthPoint() const { return HealthPoint; }
 
 };

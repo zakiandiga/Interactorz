@@ -7,6 +7,7 @@
 #include "UI/InventoryDataEntryContainer.h"
 #include "Components/PanelWidget.h"
 #include "Components/ListView.h"
+#include "Components/TextBlock.h"
 #include "DA_ItemData.h"
 #include "Inventory.h"
 
@@ -18,6 +19,7 @@ void UWPanelInventory::NativeConstruct()
 	if (Parent == nullptr) return;
 
 	Parent->OnMenuCreated.AddDynamic(this, &UWPanelInventory::AssignOwnerInventory);
+	DescriptionText->SetText(FText());
 }
 
 void UWPanelInventory::AssignOwnerInventory(UInGameMenu* Root)
@@ -42,10 +44,13 @@ int32 UWPanelInventory::CycleNextIndex(int32 TargetIndex)
 
 void UWPanelInventory::SelectCurrentItem(UObject* SelectedItem, bool IsSelected)
 {
+	if (SelectedItem == nullptr) return;
 	if (!IsSelected) return;
 
 	InventoryList->SetSelectedItem(SelectedItem);
+	SetSelectedItemFromInventory(SelectedItem);
 	SetSelectedInventoryListIndex(InventoryList->GetIndexForItem(SelectedItem));
+	SetDescriptionText(SelectedItem);
 }
 
 void UWPanelInventory::SelectionChange(float Value)
@@ -59,7 +64,6 @@ void UWPanelInventory::SelectionChange(float Value)
 
 	SelectCurrentItem(InventoryList->GetItemAt(TargetIndex), true);
 }
-
 
 void UWPanelInventory::OnPageOpened_Implementation(UWidget* OpenedWidget)
 {
@@ -101,10 +105,9 @@ void UWPanelInventory::DisplayInventoryList()
 		InventoryList->AddItem(DataContainer);		
 	}
 
-	SetSelectedInventoryListIndex(GetSelectedInventoryListIndex());
-	SelectionChange(0);
-
-
+	InventoryList->GetItemAt(GetSelectedInventoryListIndex()) == nullptr ?
+		SelectCurrentItem(InventoryList->GetItemAt(0), true) :
+		SelectCurrentItem(InventoryList->GetItemAt(GetSelectedInventoryListIndex()), true);
 }
 
 void UWPanelInventory::ClearInventoryList()
@@ -112,6 +115,17 @@ void UWPanelInventory::ClearInventoryList()
 	if (OwnerInventory == nullptr) return;
 
 	InventoryList->ClearListItems();
+	DescriptionText->SetText(FText());
+}
+
+void UWPanelInventory::SetDescriptionText(UObject* ObjectToSet)
+{
+	UInventoryDataEntryContainer* DataContainer = Cast<UInventoryDataEntryContainer>(ObjectToSet);
+	
+	if (DataContainer == nullptr) return;
+
+	FString Description = DataContainer->GetItemData().Item->ItemData.Description;
+	DescriptionText->SetText(FText::FromString(Description));
 }
 
 

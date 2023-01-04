@@ -5,7 +5,7 @@
 #include "Components/WidgetSwitcher.h"
 #include "UI/PlayerOverlay.h"
 #include "UI/InGameMenu.h"
-#include "PlayerCharacter.h"
+#include "Character/PlayerCharacter.h"
 
 void AInGameHUD::BeginPlay()
 {
@@ -70,6 +70,7 @@ void AInGameHUD::OpenMenu(bool bIsOpening)
 		//PlayerController->SetInputMode(FInputModeGameOnly());
 		PlayerController->SetShowMouseCursor(false);
 		InGameMenu->SetMainPanelHidden();
+		HUDOwner->SetControlToPlayerCharacter();
 		return;
 	}
 

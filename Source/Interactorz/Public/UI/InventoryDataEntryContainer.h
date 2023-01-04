@@ -17,10 +17,10 @@ struct FInventoryDataContainer
 
 
 	UPROPERTY(BlueprintReadWrite, Category = "UI | Inventory")
-	UDA_ItemData* Item;
+	UDA_ItemData* Item = nullptr;
 		
 	UPROPERTY(BlueprintReadWrite, Category = "UI | Inventory")
-	int32 ItemQuantity;
+	int32 ItemQuantity = 0;
 };
 	
 UCLASS(Blueprintable, BlueprintType)

@@ -25,19 +25,19 @@ struct FItemData
 	FString Name;
 		
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
-	UTexture2D* Icon;
+	UTexture2D* Icon = nullptr;
 
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
-	bool bIsStackable;
+	bool bIsStackable = true;
 
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
 	FString Description;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	EItemType ItemType;
+	EItemType ItemType = EItemType::EIT_Materials;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UStaticMesh* PickUpSprite;
+	UStaticMesh* PickUpSprite = nullptr;
 };
 
 UCLASS(BlueprintType)
