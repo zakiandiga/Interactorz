@@ -17,7 +17,7 @@ class INTERACTORZ_API IInventoryOwner
 	GENERATED_BODY()
 
 public:
-	virtual class UInventory* GetActorInventory() const = 0;
+	virtual class UInventory* GetInventory() const = 0;
 	virtual void OnItemTransferSuccess() = 0;
 	virtual void OnItemTransferFailed() = 0;
 };

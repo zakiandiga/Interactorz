@@ -62,11 +62,6 @@ void UInventory::UseItem()
 	//to be implemented
 }
 
-void UInventory::EquipItem()
-{
-	//to be implemented
-}
-
 void UInventory::ProcessItem(EItemProcessType ProcessType, UDA_ItemData* ItemToProcess, int32 QuantityToProcess)
 {
 	switch (ProcessType)

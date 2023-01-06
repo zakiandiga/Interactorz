@@ -48,7 +48,6 @@ private:
 	void DropItem(UDA_ItemData* ItemToDrop, int32 QuantityToDrop);
 	
 	void UseItem();
-	void EquipItem();
 
 public:
 	UFUNCTION(BlueprintCallable)

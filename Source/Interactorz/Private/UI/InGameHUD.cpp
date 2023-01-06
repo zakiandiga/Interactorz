@@ -39,7 +39,7 @@ void AInGameHUD::CreateMainUI()
 	PlayerController->SetShowMouseCursor(false); //Should be set somewhere else
 	
 
-	InGameMenu->SetOwnerInventory(HUDOwner->GetActorInventory());
+	InGameMenu->SetOwnerInventory(HUDOwner->GetInventory());
 	InGameMenu->OnMenuCreated.Broadcast(InGameMenu);
 }
 

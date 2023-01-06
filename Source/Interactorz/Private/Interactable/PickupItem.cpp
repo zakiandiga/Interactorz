@@ -30,7 +30,7 @@ void APickupItem::Interact(AActor* InteractingActor)
 	IInventoryOwner* InventoryOwner = Cast<IInventoryOwner>(InteractingActor);
 	if (InventoryOwner == nullptr) return;
 
-	UInventory* InteractingInventory = InventoryOwner->GetActorInventory();
+	UInventory* InteractingInventory = InventoryOwner->GetInventory();
 	if (InteractingInventory == nullptr) return;
 	
 	if (InteractingInventory->CheckSpaceAvailable() < ItemQuantity)

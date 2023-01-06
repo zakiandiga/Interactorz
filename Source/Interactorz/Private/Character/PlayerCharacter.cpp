@@ -11,6 +11,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "UI/PlayerOverlay.h"
 #include "Inventory.h"
+#include "DA_ItemData.h"
 #include "Interfaces/Interactable.h"
 #include "Animation/AnimMontage.h"
 #include "DebugHelpers/DebugMacros.h"
@@ -33,6 +34,7 @@ APlayerCharacter::APlayerCharacter()
 	PlayerCamera->SetupAttachment(CameraBoom);
 	InteractableCollider->SetupAttachment(GetRootComponent());
 
+	CameraBoom->TargetArmLength = DefaultCameraZoom;
 	CameraBoom->bUsePawnControlRotation = true;
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -88,19 +90,24 @@ void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 		
-	if (bIsLineTracingForInteractable)
-	{
-		TracingForInteractable();
-	}
-
 	if (PlayerControlState == EPlayerControlStates::EPC_OnCharacter && !InputEnabled())
 	{
 		EnableInput(Cast<APlayerController>(Controller));
 	}
 
+	if (bIsLineTracingForInteractable)
+	{
+		TracingForInteractable();
+	}
+
 	if (!GetMovementComponent()->IsFalling() && GetIsCurrentlyJumping())
 	{
 		SetIsJumping(false);
+	}
+
+	if (bIsCameraZooming)
+	{
+		MoveBoomArm(DesiredArmLength, DeltaTime);
 	}
 }
 
@@ -113,14 +120,17 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	FInputAxisBinding& Right = PlayerInputComponent->BindAxis(TEXT("Right"), this, &APlayerCharacter::MoveSide);
 	FInputAxisBinding& LookRight = PlayerInputComponent->BindAxis(TEXT("LookRight"), this, &APlayerCharacter::Turn);
 	FInputAxisBinding& LookUp = PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &APlayerCharacter::LookUp);
+	FInputAxisBinding& Zoom = PlayerInputComponent->BindAxis(TEXT("Zoom"), this, &APlayerCharacter::CameraZoom);
 
 	FInputActionBinding& Jump = PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Jump);
 	FInputActionBinding& Action01 = PlayerInputComponent->BindAction(TEXT("Action01"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Action01);
 	FInputActionBinding& Menu = PlayerInputComponent->BindAction(TEXT("Menu"), EInputEvent::IE_Pressed, this, &APlayerCharacter::ToggleMenu);
+	
 	Forward.bConsumeInput = false;
 	Right.bConsumeInput = false;
 	LookRight.bConsumeInput = false;
 	LookUp.bConsumeInput = false;
+	Zoom.bConsumeInput = false;
 	Menu.bConsumeInput = false;
 }
 
@@ -132,6 +142,30 @@ void APlayerCharacter::Jump()
 	SetIsJumping(true);
 	Super::Jump();
 }
+
+void APlayerCharacter::CameraZoom(float Value)
+{
+	if (Controller == nullptr) return;
+	if (Value == 0) return;
+	if (PlayerControlState != EPlayerControlStates::EPC_OnCharacter) return;
+
+	DesiredArmLength = CameraBoom->TargetArmLength + (Value * ZoomRate);
+	bIsCameraZooming = true;
+}
+
+void APlayerCharacter::MoveBoomArm(float ToArmLength, float DeltaTime)
+{
+	CameraBoom->TargetArmLength = FMath::FInterpTo(CameraBoom->TargetArmLength, DesiredArmLength, DeltaTime, ZoomInterp);
+	CameraBoom->TargetArmLength = FMath::Clamp(CameraBoom->TargetArmLength, MinCameraZoom, MaxCameraZoom);
+
+	if (CameraBoom->TargetArmLength >= MaxCameraZoom
+		|| CameraBoom->TargetArmLength <= MinCameraZoom 
+		|| FMath::IsNearlyEqual(CameraBoom->TargetArmLength, DesiredArmLength, 0.1f))
+	{
+		bIsCameraZooming = false;
+	}
+}
+
 
 void APlayerCharacter::TryPlayJumpMontage()
 {
@@ -207,8 +241,6 @@ void APlayerCharacter::ToggleMenu()
 	if (Controller == nullptr) return;
 	if (PlayerControlState == EPlayerControlStates::EPC_Interacting) return;
 
-	float CurrentTimeDilation = UGameplayStatics::GetGlobalTimeDilation(this);
-	UE_LOG(LogTemp, Warning, TEXT("current global time dilation = %f"), CurrentTimeDilation);
 	switch (PlayerControlState)
 	{
 	case EPlayerControlStates::EPC_OnMenu:
@@ -252,6 +284,7 @@ void APlayerCharacter::TracingForInteractable()
 	LineTraceParams.AddIgnoredActor(this);
 
 	GetWorld()->LineTraceSingleByChannel(CurrentHitResult, Start, End, ECollisionChannel::ECC_Visibility, LineTraceParams);
+	DRAW_LINE_Tick(Start, End, FColor::Green);
 
 	IInteractable* HitInteractable = Cast<IInteractable>(CurrentHitResult.GetActor());
 
@@ -308,8 +341,3 @@ void APlayerCharacter::OnItemTransferFailed()
 	//finishinginteraction()
 	PlayerControlState = EPlayerControlStates::EPC_OnCharacter;
 }
-
-
-
-
-

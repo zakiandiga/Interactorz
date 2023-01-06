@@ -52,8 +52,26 @@ private:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Components")
 	USphereComponent* InteractableCollider;
 
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "ControllerProperties");
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "ControllerProperties")
 	float RotationRate = 400.f;
+
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "ControllerProperties")
+	float ZoomRate = 100.f;
+
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "ControllerProperties")
+	float ZoomInterp = 10.f;
+
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "ControllerProperties")
+	float DefaultCameraZoom = 140.f;
+
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "ControllerProperties")
+	float MinCameraZoom = 100.f;
+
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "ControllerProperties")
+	float MaxCameraZoom = 700.f;
+
+	float DesiredArmLength = 0.f;
+	bool bIsCameraZooming = false;
 
 	UPROPERTY(EditAnywhere, meta = (AllowAPrivateAccess = "true"), Category = "Inventory")
 	UInventory* PlayerInventory;
@@ -86,19 +104,21 @@ private:
 	void LookUp(float Value);
 	void Action01();
 	virtual void Jump() override;
+	void CameraZoom(float Value);
+	void MoveBoomArm(float TargetArmLength, float DeltaTime);
 
 	void TryPlayJumpMontage();
 
 public:
+
+	UFUNCTION(BlueprintPure, Category = "Inventory")
+	FORCEINLINE UInventory* GetInventory() const { return PlayerInventory; }
 
 	virtual void OnItemTransferSuccess() override;
 	virtual void OnItemTransferFailed() override;
 
 	UFUNCTION(BlueprintCallable, Category = "MoveStates")
 	void SetControlToPlayerCharacter();
-
-	UFUNCTION(BlueprintPure, Category = "Inventory")
-	FORCEINLINE UInventory* GetActorInventory() const { return PlayerInventory; }
 
 	UFUNCTION(BlueprintPure, Category = "Move States")
 	FORCEINLINE EPlayerControlStates GetPlayerMoveStates() const { return PlayerControlState; }
