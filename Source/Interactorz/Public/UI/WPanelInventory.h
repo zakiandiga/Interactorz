@@ -10,22 +10,29 @@
 class UWidget;
 class UInGameMenu;
 class UCanvasPanel;
-class UInventory;
 class UListView;
 class UInventoryListEntry;
 class UTextBlock;
+class UInventory;
+class UDA_ItemData;
 UCLASS()
 class INTERACTORZ_API UWPanelInventory : public UUserWidget, public IIUISwitcherListener
 {
 	GENERATED_BODY()
 	
+	//add button DROP and USE in BP
+	//OnDROPClicked: OwnerInventory->ProcessItem(EItemProcessType::EIP_Drop, ItemToProcess->GetItemData().Item, 1);
+	//OnUSEClicked: OwnerInventory->ProcessItem(EItemProcessType::EIP_Consume, ItemToProcess->GetItemData().Item, 1);
+	//These will replace OnListViewClicked(UObject* ClickedObject)
 
 private:
+	bool bIsCurrentlyActive = false;
+
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "UI | Inventory")
-	int32 SelectedInventoryListIndex = 0;
+	int32 SelectedItemIndex = 0;
 
 	UPROPERTY()
-	UObject* SelectedItemFromInventory = nullptr;
+	UObject* SelectedItemObject = nullptr;
 	
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "UI | Inventory")
 	UInventory* OwnerInventory;
@@ -37,6 +44,12 @@ private:
 
 	bool ShouldCycleTargetIndex(int32 TargetIndex);
 	int32 CycleNextIndex(int32 TargetIndex);	
+
+	UFUNCTION()
+	void DisplayInventoryList();
+
+	UFUNCTION()
+	void ClearInventoryList();
 
 public:
 	
@@ -50,13 +63,7 @@ public:
 	void OnPageClosed_Implementation(UWidget* ClosedWidget) override;
 
 	UFUNCTION(BlueprintCallable, Category = "UI | Inventory")
-	void OnListViewClicked(UObject* ClickedObject);
-
-	UFUNCTION(BlueprintCallable, Category = "UI | Inventory")
-	void DisplayInventoryList();
-
-	UFUNCTION(BlueprintCallable, Category = "UI | Inventory")
-	void ClearInventoryList();
+	void ProcessItem(UObject* ClickedObject, EItemProcessType ProcessType);
 
 	UFUNCTION(BlueprintCallable, Category = "UI | Navigation")
 	void SelectCurrentItem(UObject* SelectedItem, bool IsSelected);
@@ -67,16 +74,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI | Inventory")
 	void SetOwnerInventory(UInventory* InventoryToSet) { OwnerInventory = InventoryToSet; }
 
-	UFUNCTION(BlueprintCallable, Category = "UI | Inventory")
-	void SetSelectedInventoryListIndex(const int32 TargetIndex) { SelectedInventoryListIndex = TargetIndex; }
-
-	UFUNCTION()
-	void SetSelectedItemFromInventory(UObject* SelectedItem) { SelectedItemFromInventory = SelectedItem; }
-
 	UFUNCTION(BlueprintPure, Category = "UI | Navigation")
-	int32 GetSelectedInventoryListIndex() const { return SelectedInventoryListIndex; }
+	int32 GetSelectedItemIndex() const { return SelectedItemIndex; }
+
+	UFUNCTION(BlueprintCallable, Category = "UI | Inventory")
+	void SetSelectedItemIndex(const int32 TargetIndex) { SelectedItemIndex = TargetIndex; }
+
+	UFUNCTION(BlueprintCallable, Category = "UI | Inventory")
+	FString GetItemDescriptionText(UObject* ObjectToSet);
 
 	UFUNCTION(BlueprintCallable, Category = "UI | Inventory")
 	void SetDescriptionText(UObject* ObjectToSet);
-	
+
 };

@@ -7,10 +7,29 @@ UInventory::UInventory()
 	PrimaryComponentTick.bCanEverTick = false;	
 }
 
+void UInventory::UpdateInventorySpace()
+{
+	int32 CurrentTotalQuantity = 0;
+
+	for (TPair<UDA_ItemData*, int32> InventoryEntry : ActiveInventory)
+	{
+		CurrentTotalQuantity += InventoryEntry.Value;
+	}
+	
+	UsedInventorySpace = CurrentTotalQuantity;
+}
+
 void UInventory::AddToInventory(UDA_ItemData* ItemToAdd, int32 QuantityToAdd)
 {	
+	if (CheckSpaceAvailable() < QuantityToAdd)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("INVENTORY IS FULL"));
+		return;
+	}
+
 	int32 newQuantity = CheckItemQuantityInInventory(ItemToAdd) + QuantityToAdd;
 	ActiveInventory.Emplace(ItemToAdd, newQuantity);
+	UpdateInventorySpace();
 }
 
 void UInventory::RemoveFromInventory(UDA_ItemData* ItemToRemove, int32 QuantityToRemove)
@@ -23,6 +42,7 @@ void UInventory::RemoveFromInventory(UDA_ItemData* ItemToRemove, int32 QuantityT
 	if (CheckItemQuantityInInventory(ItemToRemove) > 0) return;
 	
 	ActiveInventory.FindAndRemoveChecked(ItemToRemove);	
+	UpdateInventorySpace();
 }
 
 void UInventory::DropItem(UDA_ItemData* ItemToDrop, int32 QuantityToDrop)
@@ -37,7 +57,7 @@ void UInventory::DropItem(UDA_ItemData* ItemToDrop, int32 QuantityToDrop)
 	RemoveFromInventory(ItemToDrop, QuantityToDrop);
 }
 
-void UInventory::ConsumeItem()
+void UInventory::UseItem()
 {
 	//to be implemented
 }
@@ -54,11 +74,8 @@ void UInventory::ProcessItem(EItemProcessType ProcessType, UDA_ItemData* ItemToP
 	case EItemProcessType::EIP_Drop:
 		DropItem(ItemToProcess, QuantityToProcess);
 		break;
-	case EItemProcessType::EIP_Consume:
-		ConsumeItem();
-		break;
-	case EItemProcessType::EIP_Equip:
-		EquipItem();
+	case EItemProcessType::EIP_Use:
+		UseItem();
 		break;
 	case EItemProcessType::EIP_Remove:
 		RemoveFromInventory(ItemToProcess, QuantityToProcess);
@@ -79,7 +96,7 @@ bool UInventory::CheckItemAvailable(UDA_ItemData* ItemToCheck) const
 
 int32 UInventory::CheckSpaceAvailable() const
 {
-	return InventoryLimit - ActiveInventory.Num();
+	return MaxInventorySpace - UsedInventorySpace;
 }
 
 int32 UInventory::CheckItemQuantityInInventory(UDA_ItemData* ItemToCheck) const

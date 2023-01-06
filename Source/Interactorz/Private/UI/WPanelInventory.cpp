@@ -48,14 +48,14 @@ void UWPanelInventory::SelectCurrentItem(UObject* SelectedItem, bool IsSelected)
 	if (!IsSelected) return;
 
 	InventoryList->SetSelectedItem(SelectedItem);
-	SetSelectedItemFromInventory(SelectedItem);
-	SetSelectedInventoryListIndex(InventoryList->GetIndexForItem(SelectedItem));
+	InventoryList->SetSelectedIndex(InventoryList->GetIndexForItem(SelectedItem));
+	SetSelectedItemIndex(InventoryList->GetIndexForItem(SelectedItem));
 	SetDescriptionText(SelectedItem);
 }
 
 void UWPanelInventory::SelectionChange(float Value)
 {
-	int32 TargetIndex = SelectedInventoryListIndex + (int32)Value;
+	int32 TargetIndex = SelectedItemIndex + (int32)Value;
 
 	if (ShouldCycleTargetIndex(TargetIndex))
 	{
@@ -72,10 +72,11 @@ void UWPanelInventory::OnPageOpened_Implementation(UWidget* OpenedWidget)
 
 void UWPanelInventory::OnPageClosed_Implementation(UWidget* ClosedWidget)
 {
+	InventoryList->SetSelectedItem(nullptr);
 	ClearInventoryList();
 }
 
-void UWPanelInventory::OnListViewClicked(UObject* ClickedObject)
+void UWPanelInventory::ProcessItem(UObject* ClickedObject, EItemProcessType ProcessType = EItemProcessType::EIP_Use)
 {
 	UInventoryDataEntryContainer* ItemToProcess = Cast<UInventoryDataEntryContainer>(ClickedObject);
 
@@ -84,8 +85,7 @@ void UWPanelInventory::OnListViewClicked(UObject* ClickedObject)
 	int32 CurrentQuantity = ItemToProcess->GetItemData().ItemQuantity;
 	CurrentQuantity -= 1;
 
-	//Drop item for now, should be called from a command button groups that appear when the entry clicked
-	OwnerInventory->ProcessItem(EItemProcessType::EIP_Drop, ItemToProcess->GetItemData().Item, 1);
+	OwnerInventory->ProcessItem(ProcessType, ItemToProcess->GetItemData().Item, 1);
 
 	ClearInventoryList();
 	DisplayInventoryList();
@@ -105,9 +105,9 @@ void UWPanelInventory::DisplayInventoryList()
 		InventoryList->AddItem(DataContainer);		
 	}
 
-	InventoryList->GetItemAt(GetSelectedInventoryListIndex()) == nullptr ?
+	InventoryList->GetItemAt(GetSelectedItemIndex()) == nullptr ?
 		SelectCurrentItem(InventoryList->GetItemAt(0), true) :
-		SelectCurrentItem(InventoryList->GetItemAt(GetSelectedInventoryListIndex()), true);
+		SelectCurrentItem(InventoryList->GetItemAt(GetSelectedItemIndex()), true);
 }
 
 void UWPanelInventory::ClearInventoryList()
@@ -118,16 +118,21 @@ void UWPanelInventory::ClearInventoryList()
 	DescriptionText->SetText(FText());
 }
 
-void UWPanelInventory::SetDescriptionText(UObject* ObjectToSet)
+FString UWPanelInventory::GetItemDescriptionText(UObject* ObjectToGet)
 {
-	UInventoryDataEntryContainer* DataContainer = Cast<UInventoryDataEntryContainer>(ObjectToSet);
-	
-	if (DataContainer == nullptr) return;
+	UInventoryDataEntryContainer* DataContainer = Cast<UInventoryDataEntryContainer>(ObjectToGet);
 
-	FString Description = DataContainer->GetItemData().Item->ItemData.Description;
-	DescriptionText->SetText(FText::FromString(Description));
+	if (DataContainer == nullptr)
+	{
+		return FString("DESCRIPTION NOT FOUND!");
+	}
+
+	return DataContainer->GetItemData().Item->ItemData.Description;
 }
 
+void UWPanelInventory::SetDescriptionText(UObject* ObjectToSet)
+{	
+	if (ObjectToSet == nullptr) return;
 
-
-
+	DescriptionText->SetText(FText::FromString(GetItemDescriptionText(ObjectToSet)));
+}

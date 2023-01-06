@@ -48,7 +48,6 @@ void AGatheringSpot::Interact(AActor* InteractingActor)
 	}
 
 	GetWorldTimerManager().SetTimer(GatheringTimer, this, &AGatheringSpot::OnGatheringDone, GatheringTime, false);
-
 }
 
 void AGatheringSpot::OnGatheringDone()

@@ -10,8 +10,7 @@ UENUM(Blueprintable)
 enum class EItemProcessType : uint8
 {
 	EIP_Drop UMETA(DisplayName = "Drop"),
-	EIP_Consume UMETA(DisplayName = "Consume"),
-	EIP_Equip UMETA(DisplayName = "Equip"),
+	EIP_Use UMETA(DisplayName = "Use"),
 	EIP_Remove UMETA(DisplayName = "Remove"),
 	EIP_Retrieve UMETA(DisplayName = "Retrieve")
 };
@@ -30,9 +29,14 @@ private:
 	TMap<UDA_ItemData*, int32> ActiveInventory = TMap<UDA_ItemData*, int32>();
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Inventory Properties")
-	int32 InventoryLimit = 20;
+	int32 MaxInventorySpace = 20;
+
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Inventory Properties")
+	int32 UsedInventorySpace = 0;
 
 	FVector DropLocationOffset = FVector(100, 100, 0);
+
+	void UpdateInventorySpace();
 
 	UFUNCTION(BlueprintCallable, meta = (AllowPrivateAccess = "true"), Category = "Inventory")
 	void AddToInventory(UDA_ItemData* ItemToAdd, int32 QuantityToAdd);
@@ -43,7 +47,7 @@ private:
 	UFUNCTION(BlueprintCallable, meta = (AllowPrivateAccess = "true"), Category = "Inventory")
 	void DropItem(UDA_ItemData* ItemToDrop, int32 QuantityToDrop);
 	
-	void ConsumeItem();
+	void UseItem();
 	void EquipItem();
 
 public:
