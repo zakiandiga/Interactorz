@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "DA_ItemData.generated.h"
+#include "DAItemData.generated.h"
 
 UENUM(BlueprintType)
 enum class EItemType : uint8
@@ -41,7 +41,7 @@ struct FItemData
 };
 
 UCLASS(BlueprintType)
-class INTERACTORZ_API UDA_ItemData : public UDataAsset
+class INTERACTORZ_API UDAItemData : public UDataAsset
 {
 	GENERATED_BODY()
 
@@ -49,6 +49,9 @@ public:
 
 	UPROPERTY(EditAnyWhere, BlueprintReadOnly)
 	FItemData ItemData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<class UItemAction> ItemAction;
 	
 };
 

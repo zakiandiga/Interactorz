@@ -1,38 +1,38 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UI/WPanelInventory.h"
-#include "UI/InGameMenu.h"
+#include "UI/WIPanelInventory.h"
+#include "UI/WIInGameMenu.h"
 #include "UI/InventoryListEntry.h"
-#include "UI/InventoryDataEntryContainer.h"
+#include "UI/InventoryEntryDataContainer.h"
 #include "Components/PanelWidget.h"
 #include "Components/ListView.h"
 #include "Components/TextBlock.h"
-#include "DA_ItemData.h"
+#include "DAItemData.h"
 #include "Inventory.h"
 
-void UWPanelInventory::NativeConstruct()
+void UWIPanelInventory::NativeConstruct()
 {
 	Super::NativeConstruct();
-	UInGameMenu* Parent = Cast<UInGameMenu>(GetParent()->GetOuter()->GetOuter());
+	UWIInGameMenu* Parent = Cast<UWIInGameMenu>(GetParent()->GetOuter()->GetOuter());
 
 	if (Parent == nullptr) return;
 
-	Parent->OnMenuCreated.AddDynamic(this, &UWPanelInventory::AssignOwnerInventory);
+	Parent->OnMenuCreated.AddDynamic(this, &UWIPanelInventory::AssignOwnerInventory);
 	DescriptionText->SetText(FText());
 }
 
-void UWPanelInventory::AssignOwnerInventory(UInGameMenu* Root)
+void UWIPanelInventory::AssignOwnerInventory(UWIInGameMenu* Root)
 {
 	OwnerInventory = Root->GetOwnerInventory();
 }
 
-bool UWPanelInventory::ShouldCycleTargetIndex(int32 TargetIndex)
+bool UWIPanelInventory::ShouldCycleTargetIndex(int32 TargetIndex)
 {
 	return TargetIndex < 0 || TargetIndex > InventoryList->GetNumItems() -1;
 }
 
-int32 UWPanelInventory::CycleNextIndex(int32 TargetIndex)
+int32 UWIPanelInventory::CycleNextIndex(int32 TargetIndex)
 {
 	if (TargetIndex < 0)
 	{
@@ -42,7 +42,7 @@ int32 UWPanelInventory::CycleNextIndex(int32 TargetIndex)
 	return 0;
 }
 
-void UWPanelInventory::SelectCurrentItem(UObject* SelectedItem, bool IsSelected)
+void UWIPanelInventory::SelectCurrentItem(UObject* SelectedItem, bool IsSelected)
 {
 	if (SelectedItem == nullptr) return;
 	if (!IsSelected) return;
@@ -53,7 +53,7 @@ void UWPanelInventory::SelectCurrentItem(UObject* SelectedItem, bool IsSelected)
 	SetDescriptionText(SelectedItem);
 }
 
-void UWPanelInventory::SelectionChange(float Value)
+void UWIPanelInventory::SelectionChange(float Value)
 {
 	int32 TargetIndex = SelectedItemIndex + (int32)Value;
 
@@ -65,43 +65,43 @@ void UWPanelInventory::SelectionChange(float Value)
 	SelectCurrentItem(InventoryList->GetItemAt(TargetIndex), true);
 }
 
-void UWPanelInventory::OnPageOpened_Implementation(UWidget* OpenedWidget)
+void UWIPanelInventory::OnPageOpened_Implementation(UWidget* OpenedWidget)
 {
 	DisplayInventoryList();
 }
 
-void UWPanelInventory::OnPageClosed_Implementation(UWidget* ClosedWidget)
+void UWIPanelInventory::OnPageClosed_Implementation(UWidget* ClosedWidget)
 {
 	InventoryList->SetSelectedItem(nullptr);
 	ClearInventoryList();
 }
 
-void UWPanelInventory::ProcessItem(UObject* ClickedObject, EItemProcessType ProcessType = EItemProcessType::EIP_Use)
+void UWIPanelInventory::ProcessItem(UObject* ClickedObject, EItemProcessType ProcessType = EItemProcessType::EIP_Use)
 {
-	UInventoryDataEntryContainer* ItemToProcess = Cast<UInventoryDataEntryContainer>(ClickedObject);
+	UInventoryEntryDataContainer* ItemToProcess = Cast<UInventoryEntryDataContainer>(ClickedObject);
 
 	if (ItemToProcess == nullptr) return;
 
-	int32 CurrentQuantity = ItemToProcess->GetItemData().ItemQuantity;
+	int32 CurrentQuantity = ItemToProcess->GetDataContainer().ItemQuantity;
 	CurrentQuantity -= 1;
 
-	OwnerInventory->ProcessItem(ProcessType, ItemToProcess->GetItemData().Item, 1);
+	OwnerInventory->ProcessItem(ProcessType, ItemToProcess->GetDataContainer().Item, 1);
 
 	ClearInventoryList();
 	DisplayInventoryList();
 }
 
-void UWPanelInventory::DisplayInventoryList()
+void UWIPanelInventory::DisplayInventoryList()
 {
 	if (OwnerInventory == nullptr) return;
 
-	for (TPair<UDA_ItemData*, int32>& item : OwnerInventory->GetActiveInventory())
+	for (TPair<UDAItemData*, int32>& item : OwnerInventory->GetActiveInventory())
 	{
 		if (item.Key == nullptr) return;
 
-		UDA_ItemData* itemData = item.Key;
-		UInventoryDataEntryContainer* DataContainer = NewObject<UInventoryDataEntryContainer>();
-		DataContainer->SetDataEntryContainer(itemData, item.Value);
+		UDAItemData* itemData = item.Key;
+		UInventoryEntryDataContainer* DataContainer = NewObject<UInventoryEntryDataContainer>();
+		DataContainer->SetDataContainer(itemData, item.Value);
 		InventoryList->AddItem(DataContainer);		
 	}
 
@@ -110,7 +110,7 @@ void UWPanelInventory::DisplayInventoryList()
 		SelectCurrentItem(InventoryList->GetItemAt(GetSelectedItemIndex()), true);
 }
 
-void UWPanelInventory::ClearInventoryList()
+void UWIPanelInventory::ClearInventoryList()
 {
 	if (OwnerInventory == nullptr) return;
 
@@ -118,19 +118,19 @@ void UWPanelInventory::ClearInventoryList()
 	DescriptionText->SetText(FText());
 }
 
-FString UWPanelInventory::GetItemDescriptionText(UObject* ObjectToGet)
+FString UWIPanelInventory::GetItemDescriptionText(UObject* ObjectToGet)
 {
-	UInventoryDataEntryContainer* DataContainer = Cast<UInventoryDataEntryContainer>(ObjectToGet);
+	UInventoryEntryDataContainer* DataContainer = Cast<UInventoryEntryDataContainer>(ObjectToGet);
 
 	if (DataContainer == nullptr)
 	{
 		return FString("DESCRIPTION NOT FOUND!");
 	}
 
-	return DataContainer->GetItemData().Item->ItemData.Description;
+	return DataContainer->GetDataContainer().Item->ItemData.Description;
 }
 
-void UWPanelInventory::SetDescriptionText(UObject* ObjectToSet)
+void UWIPanelInventory::SetDescriptionText(UObject* ObjectToSet)
 {	
 	if (ObjectToSet == nullptr) return;
 

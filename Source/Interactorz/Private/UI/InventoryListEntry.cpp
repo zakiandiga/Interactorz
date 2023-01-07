@@ -2,21 +2,21 @@
 
 
 #include "UI/InventoryListEntry.h"
-#include "UI/InventoryDataEntryContainer.h"
+#include "UI/InventoryEntryDataContainer.h"
 #include "Blueprint/IUserObjectListEntry.h"
 #include "Components/CanvasPanel.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "Inventory.h"
-#include "DA_ItemData.h"
+#include "DAItemData.h"
 
 void UInventoryListEntry::NativeOnListItemObjectSet(UObject* ListItemObject)
 {
-	UInventoryDataEntryContainer* ItemDataContainer = Cast<UInventoryDataEntryContainer>(ListItemObject);
+	UInventoryEntryDataContainer* ItemDataContainer = Cast<UInventoryEntryDataContainer>(ListItemObject);
 	
-	Item = ItemDataContainer->GetItemData().Item;
+	Item = ItemDataContainer->GetDataContainer().Item;
 
 	ItemIcon->SetBrushFromTexture(Item->ItemData.Icon, false);
 	NameText->SetText(FText::FromString(Item->ItemData.Name));
-	QuantityText->SetText(FText::FromString(FString::FromInt(ItemDataContainer->GetItemData().ItemQuantity)));
+	QuantityText->SetText(FText::FromString(FString::FromInt(ItemDataContainer->GetDataContainer().ItemQuantity)));
 }

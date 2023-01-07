@@ -13,7 +13,7 @@ class USpringArmComponent;
 class USphereComponent;
 class UInventory;
 class IInteractable;
-class UPlayerOverlay;
+class UWIPlayerOverlay;
 class UAnimMontage;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableTraced, FString, InteractableName);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerOpeningMenu, bool, bIsOpening); //false = closing
@@ -41,7 +41,7 @@ public:
 
 private:	
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Components")
-	UPlayerOverlay* PlayerOverlay;
+	UWIPlayerOverlay* PlayerOverlay;
 
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Components")
 	USpringArmComponent* CameraBoom;

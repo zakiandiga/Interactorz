@@ -5,24 +5,24 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Interfaces/IUISwitcherListener.h"
-#include "WPanelInventory.generated.h"
+#include "WIPanelInventory.generated.h"
 
 class UWidget;
-class UInGameMenu;
+class UWIInGameMenu;
 class UCanvasPanel;
 class UListView;
 class UInventoryListEntry;
 class UTextBlock;
 class UInventory;
-class UDA_ItemData;
+class UDAItemData;
 UCLASS()
-class INTERACTORZ_API UWPanelInventory : public UUserWidget, public IIUISwitcherListener
+class INTERACTORZ_API UWIPanelInventory : public UUserWidget, public IIUISwitcherListener
 {
 	GENERATED_BODY()
 	
 	//add button DROP and USE in BP
-	//OnDROPClicked: OwnerInventory->ProcessItem(EItemProcessType::EIP_Drop, ItemToProcess->GetItemData().Item, 1);
-	//OnUSEClicked: OwnerInventory->ProcessItem(EItemProcessType::EIP_Consume, ItemToProcess->GetItemData().Item, 1);
+	//OnDROPClicked: OwnerInventory->ProcessItem(EItemProcessType::EIP_Drop, ItemToProcess->GetDataContainer().Item, 1);
+	//OnUSEClicked: OwnerInventory->ProcessItem(EItemProcessType::EIP_Consume, ItemToProcess->GetDataContainer().Item, 1);
 	//These will replace OnListViewClicked(UObject* ClickedObject)
 
 private:
@@ -40,7 +40,7 @@ private:
 	void NativeConstruct() override;
 	
 	UFUNCTION()
-	void AssignOwnerInventory(UInGameMenu* Root);
+	void AssignOwnerInventory(UWIInGameMenu* Root);
 
 	bool ShouldCycleTargetIndex(int32 TargetIndex);
 	int32 CycleNextIndex(int32 TargetIndex);	

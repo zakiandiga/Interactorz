@@ -7,7 +7,7 @@
 #include "PickupItem.generated.h"
 
 class UStaticMeshComponent;
-class UDA_ItemData;
+class UDAItemData;
 UCLASS()
 class INTERACTORZ_API APickupItem : public AActor, public IInteractable
 {
@@ -22,7 +22,7 @@ private:
 	UStaticMeshComponent* ItemSprite;
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Item Data")
-	UDA_ItemData* ItemData;
+	UDAItemData* ItemData;
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Item Data")
 	int32 ItemQuantity = 1;
@@ -41,7 +41,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Interact(AActor* InteractingActor) override;
 	
-	void SpawnInitialize(UDA_ItemData* ItemDataToSet, int32 QuantityToSet);
+	void SpawnInitialize(UDAItemData* ItemDataToSet, int32 QuantityToSet);
 	UFUNCTION(BlueprintCallable, Category = "Interactable")
 
 	FString GetInteractableName() override;

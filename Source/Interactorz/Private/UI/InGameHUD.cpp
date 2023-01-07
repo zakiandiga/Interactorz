@@ -3,8 +3,8 @@
 
 #include "UI/InGameHUD.h"
 #include "Components/WidgetSwitcher.h"
-#include "UI/PlayerOverlay.h"
-#include "UI/InGameMenu.h"
+#include "UI/WIPlayerOverlay.h"
+#include "UI/WIInGameMenu.h"
 #include "Character/PlayerCharacter.h"
 
 void AInGameHUD::BeginPlay()
@@ -21,23 +21,20 @@ void AInGameHUD::BeginPlay()
 
 	CreateMainUI();
 	BindPlayerActions();
-
-	PlayerController->SetInputMode(FInputModeGameOnly());
 }
 
 void AInGameHUD::CreateMainUI()
 {
-	PlayerOverlay = CreateWidget<UPlayerOverlay>(PlayerController, PlayerOverlayClass);
+	PlayerOverlay = CreateWidget<UWIPlayerOverlay>(PlayerController, PlayerOverlayClass);
 	PlayerOverlay->AddToViewport();
 	PlayerOverlay->SetInteractableInfoPanelHidden(FString());
 
-	InGameMenu = CreateWidget<UInGameMenu>(PlayerController, InGameMenuClass);
+	InGameMenu = CreateWidget<UWIInGameMenu>(PlayerController, InGameMenuClass);
 	InGameMenu->AddToViewport();
 	InGameMenu->SetMainPanelHidden();
 
 	PlayerController->SetInputMode(FInputModeGameOnly());
-	PlayerController->SetShowMouseCursor(false); //Should be set somewhere else
-	
+	PlayerController->SetShowMouseCursor(false); //Should be set somewhere else?	
 
 	InGameMenu->SetOwnerInventory(HUDOwner->GetInventory());
 	InGameMenu->OnMenuCreated.Broadcast(InGameMenu);

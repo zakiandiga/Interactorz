@@ -10,7 +10,7 @@
 class UImage;
 class UCanvasPanel;
 class UTextBlock;
-class UDA_ItemData;
+class UDAItemData;
 UCLASS()
 class INTERACTORZ_API UInventoryListEntry : public UUserWidget, public IUserObjectListEntry
 {
@@ -29,11 +29,11 @@ protected:
 	UTextBlock* QuantityText;
 
 	UPROPERTY(BlueprintReadWrite, Category = "UI | InventoryData")
-	UDA_ItemData* Item;
+	UDAItemData* Item;
 
 public:
 	UFUNCTION(BlueprintPure, Category = "UI | InventoryData")
-	UDA_ItemData* GetItemData() const { return Item; }
+	UDAItemData* GetItemData() const { return Item; }
 };
 
 

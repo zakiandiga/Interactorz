@@ -9,9 +9,9 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "UI/PlayerOverlay.h"
+#include "UI/WIPlayerOverlay.h"
 #include "Inventory.h"
-#include "DA_ItemData.h"
+#include "DAItemData.h"
 #include "Interfaces/Interactable.h"
 #include "Animation/AnimMontage.h"
 #include "DebugHelpers/DebugMacros.h"
@@ -27,7 +27,7 @@ APlayerCharacter::APlayerCharacter()
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
 	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Player Camera"));
 	PlayerInventory = CreateDefaultSubobject<UInventory>(TEXT("Player Inventory"));
-	PlayerOverlay = CreateDefaultSubobject<UPlayerOverlay>(TEXT("Player Overlay"));
+	PlayerOverlay = CreateDefaultSubobject<UWIPlayerOverlay>(TEXT("Player Overlay"));
 	InteractableCollider = CreateDefaultSubobject<USphereComponent>(TEXT("Interactable Collider"));
 
 	CameraBoom->SetupAttachment(GetRootComponent());

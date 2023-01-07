@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "InGameMenu.generated.h"
+#include "WIInGameMenu.generated.h"
 
 class UCanvasPanel;
 class UListView;
@@ -12,9 +12,9 @@ class UInventory;
 class UInventoryListEntry;
 class UWIWidgetSwitcher;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMenuCreated, UInGameMenu*, Root);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMenuCreated, UWIInGameMenu*, Root);
 UCLASS()
-class INTERACTORZ_API UInGameMenu : public UUserWidget
+class INTERACTORZ_API UWIInGameMenu : public UUserWidget
 {
 	GENERATED_BODY()
 	

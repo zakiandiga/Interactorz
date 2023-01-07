@@ -6,7 +6,7 @@
 #include "Interfaces/Interactable.h"
 #include "GatheringSpot.generated.h"
 
-class UDA_ItemData;
+class UDAItemData;
 class IInventoryOwner;
 
 UCLASS()
@@ -37,7 +37,7 @@ private:
 	UStaticMeshComponent* ItemMesh = nullptr;
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Item Data")
-	UDA_ItemData* ItemData = nullptr;
+	UDAItemData* ItemData = nullptr;
 
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Item Data")
 	int32 HealthPoint = 1;

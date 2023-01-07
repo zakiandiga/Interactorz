@@ -2,7 +2,7 @@
 
 
 #include "Interactable/PickupItem.h"
-#include "DA_ItemData.h"
+#include "DAItemData.h"
 #include "Inventory.h"
 #include "Interfaces/InventoryOwner.h"
 
@@ -10,7 +10,7 @@ APickupItem::APickupItem()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	ItemData = CreateDefaultSubobject<UDA_ItemData>(TEXT("Item Info"));
+	ItemData = CreateDefaultSubobject<UDAItemData>(TEXT("Item Info"));
 	ItemSprite = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Item Sprite"));
 	
 	SetRootComponent(ItemSprite);
@@ -46,7 +46,7 @@ void APickupItem::Interact(AActor* InteractingActor)
 	Destroy();
 }
 
-void APickupItem::SpawnInitialize(UDA_ItemData* ItemDataToSet, int32 QuantityToSet)
+void APickupItem::SpawnInitialize(UDAItemData* ItemDataToSet, int32 QuantityToSet)
 {
 	if (ItemDataToSet == nullptr) return;
 

@@ -3,14 +3,14 @@
 
 #include "Interactable/GatheringSpot.h"
 #include "Kismet/GameplayStatics.h"
-#include "DA_ItemData.h"
+#include "DAItemData.h"
 #include "Inventory.h"
 #include "Interfaces/InventoryOwner.h"
 
 AGatheringSpot::AGatheringSpot()
 {
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Item Sprite"));
-	ItemData = CreateDefaultSubobject<UDA_ItemData>(TEXT("Item Info"));
+	ItemData = CreateDefaultSubobject<UDAItemData>(TEXT("Item Info"));
 
 	SetRootComponent(ItemMesh);
 }

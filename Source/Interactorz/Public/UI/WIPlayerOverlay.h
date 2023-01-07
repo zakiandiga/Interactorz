@@ -4,14 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "PlayerOverlay.generated.h"
-
-//This is a part of HUD, Attached to the screen, not the player.
+#include "WIPlayerOverlay.generated.h"
 
 class UCanvasPanel;
 class UTextBlock;
 UCLASS()
-class INTERACTORZ_API UPlayerOverlay : public UUserWidget
+class INTERACTORZ_API UWIPlayerOverlay : public UUserWidget
 {
 	GENERATED_BODY()	
 

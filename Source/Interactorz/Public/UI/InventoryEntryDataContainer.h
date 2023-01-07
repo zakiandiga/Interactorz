@@ -4,9 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "InventoryDataEntryContainer.generated.h"
+#include "InventoryEntryDataContainer.generated.h"
 
-class UDA_ItemData;
+class UDAItemData;
 class UImage;
 class UTextBlock;
 
@@ -17,14 +17,14 @@ struct FInventoryDataContainer
 
 
 	UPROPERTY(BlueprintReadWrite, Category = "UI | Inventory")
-	UDA_ItemData* Item = nullptr;
+	UDAItemData* Item = nullptr;
 		
 	UPROPERTY(BlueprintReadWrite, Category = "UI | Inventory")
 	int32 ItemQuantity = 0;
 };
 	
 UCLASS(Blueprintable, BlueprintType)
-class INTERACTORZ_API UInventoryDataEntryContainer : public UObject
+class INTERACTORZ_API UInventoryEntryDataContainer : public UObject
 {
 	GENERATED_BODY()
 
@@ -36,10 +36,10 @@ private:
 public:
 	
 	UFUNCTION(BlueprintCallable, Category = "UI | Inventory")
-	void SetDataEntryContainer(UDA_ItemData* ItemData, int32 ItemQuantity);
+	void SetDataContainer(UDAItemData* ItemData, int32 ItemQuantity);
 
 	UFUNCTION()
-	FInventoryDataContainer GetItemData() { return InventoryDataContainer; }
+	FInventoryDataContainer GetDataContainer() { return InventoryDataContainer; }
 
 	UFUNCTION()
 	void SetDataQuantity(int32 NewQuantity) { InventoryDataContainer.ItemQuantity = NewQuantity; }
