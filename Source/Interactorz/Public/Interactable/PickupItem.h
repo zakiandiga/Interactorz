@@ -33,16 +33,17 @@ private:
 
 
 public:
+	void SpawnInitialize(UDAItemData* ItemDataToSet, int32 QuantityToSet);
 
-	//review if CanInteract still needed
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Interactable")
 	bool CanInteract(const AActor* InteractingActor) override;
 
-	UFUNCTION(BlueprintCallable)
-	void Interact(AActor* InteractingActor) override;
-	
-	void SpawnInitialize(UDAItemData* ItemDataToSet, int32 QuantityToSet);
 	UFUNCTION(BlueprintCallable, Category = "Interactable")
+	void Interact(AActor* InteractingActor) override;
 
+	UFUNCTION(BlueprintCallable, Category = "Interactable")
 	FString GetInteractableName() override;
+
+	UFUNCTION(BlueprintCallable, Category = "Interactable")
+	FOnInteractionFinished& OnInteractionFinished() override { return OnInteractionFinishedDelegate; }
 };

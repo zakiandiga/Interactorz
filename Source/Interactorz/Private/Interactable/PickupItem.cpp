@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Interactable/PickupItem.h"
 #include "DAItemData.h"
 #include "Inventory.h"
@@ -37,12 +36,14 @@ void APickupItem::Interact(AActor* InteractingActor)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Your inventory is full!"));
 		InventoryOwner->OnItemTransferFailed();
+		OnInteractionFinished().ExecuteIfBound();
 		return;
 	}
 
 	InteractingInventory->ProcessItem(EItemProcessType::EIP_Retrieve, ItemData, ItemQuantity);
 	UE_LOG(LogTemp, Warning, TEXT("%d of %s added to the %s"), ItemQuantity, *ItemData->ItemData.Name, *InteractingInventory->GetOwner()->GetActorNameOrLabel());
 	InventoryOwner->OnItemTransferSuccess();
+	OnInteractionFinished().ExecuteIfBound();
 	Destroy();
 }
 

@@ -6,12 +6,13 @@
 #include "UObject/Interface.h"
 #include "Interactable.generated.h"
 
-UINTERFACE(MinimalAPI)
+UINTERFACE(MinimalAPI, Blueprintable)
 class UInteractable : public UInterface
 {
 	GENERATED_BODY()
 };
 
+DECLARE_DYNAMIC_DELEGATE(FOnInteractionFinished);
 class INTERACTORZ_API IInteractable
 {
 	GENERATED_BODY()
@@ -22,4 +23,8 @@ public:
 	virtual void Interact(AActor* InteractingActor) = 0;
 
 	virtual FString GetInteractableName() = 0;
+	
+	virtual FOnInteractionFinished& OnInteractionFinished() = 0;
+
+	FOnInteractionFinished OnInteractionFinishedDelegate;
 };

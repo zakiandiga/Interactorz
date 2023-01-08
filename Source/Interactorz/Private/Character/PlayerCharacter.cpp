@@ -12,7 +12,7 @@
 #include "UI/WIPlayerOverlay.h"
 #include "Inventory.h"
 #include "DAItemData.h"
-#include "Interfaces/Interactable.h"
+#include "InteractionHandler.h"
 #include "Animation/AnimMontage.h"
 #include "DebugHelpers/DebugMacros.h"
 
@@ -29,6 +29,7 @@ APlayerCharacter::APlayerCharacter()
 	PlayerInventory = CreateDefaultSubobject<UInventory>(TEXT("Player Inventory"));
 	PlayerOverlay = CreateDefaultSubobject<UWIPlayerOverlay>(TEXT("Player Overlay"));
 	InteractableCollider = CreateDefaultSubobject<USphereComponent>(TEXT("Interactable Collider"));
+	InteractionHandler = CreateDefaultSubobject<UInteractionHandler>(TEXT("Interaction Handler"));
 
 	CameraBoom->SetupAttachment(GetRootComponent());
 	PlayerCamera->SetupAttachment(CameraBoom);
@@ -49,9 +50,6 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	FString Message = Controller->GetName();
-	UE_LOG(LogTemp, Warning, TEXT("Character: %s"), *Message);
-
 	InteractLineTraceLength = InteractableCollider->GetScaledSphereRadius();
 
 	InteractableCollider->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::BeginOverlapDelegate);
@@ -121,7 +119,6 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	FInputAxisBinding& LookRight = PlayerInputComponent->BindAxis(TEXT("LookRight"), this, &APlayerCharacter::Turn);
 	FInputAxisBinding& LookUp = PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &APlayerCharacter::LookUp);
 	FInputAxisBinding& Zoom = PlayerInputComponent->BindAxis(TEXT("Zoom"), this, &APlayerCharacter::CameraZoom);
-
 	FInputActionBinding& Jump = PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Jump);
 	FInputActionBinding& Action01 = PlayerInputComponent->BindAction(TEXT("Action01"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Action01);
 	FInputActionBinding& Menu = PlayerInputComponent->BindAction(TEXT("Menu"), EInputEvent::IE_Pressed, this, &APlayerCharacter::ToggleMenu);
@@ -165,7 +162,6 @@ void APlayerCharacter::MoveBoomArm(float ToArmLength, float DeltaTime)
 		bIsCameraZooming = false;
 	}
 }
-
 
 void APlayerCharacter::TryPlayJumpMontage()
 {
@@ -227,12 +223,14 @@ void APlayerCharacter::Action01()
 	if (Controller == nullptr) return;
 	if (PlayerControlState != EPlayerControlStates::EPC_OnCharacter) return;
 
-	if (CurrentInteractable == nullptr) return;
+	if (CurrentInteractableActor == nullptr) return;
 
 	//start interacting animation, on selected montage, change PlayerControlState back to OnCharacter
 
 	PlayerControlState = EPlayerControlStates::EPC_Interacting;
-	CurrentInteractable->Interact(Cast<AActor>(this));
+
+	InteractionHandler->OnInteractionEnds.AddUniqueDynamic(this, &APlayerCharacter::StopInteraction);
+	InteractionHandler->InitiateInteraction();
 	FaceInteractable();
 }
 
@@ -284,41 +282,40 @@ void APlayerCharacter::TracingForInteractable()
 	LineTraceParams.AddIgnoredActor(this);
 
 	GetWorld()->LineTraceSingleByChannel(CurrentHitResult, Start, End, ECollisionChannel::ECC_Visibility, LineTraceParams);
-	DRAW_LINE_Tick(Start, End, FColor::Green);
 
-	IInteractable* HitInteractable = Cast<IInteractable>(CurrentHitResult.GetActor());
+	AActor* HitActor = CurrentHitResult.GetActor();
 
-	if (HitInteractable == nullptr)
+	if (CurrentInteractableActor != nullptr && (HitActor != CurrentInteractableActor || !InteractionHandler->TrySetInteractable(HitActor)))
 	{
-		ClearInteractable();
+		ClearInteractable();		
 		return;
 	}
 
-	AssignInteractable(HitInteractable);	
+	CurrentInteractableActor = HitActor;
+	AssignInteractable(CurrentInteractableActor);
 }
 
-void APlayerCharacter::AssignInteractable(IInteractable* InteractableToAssign)
+void APlayerCharacter::AssignInteractable(AActor* InteractableToAssign)
 {
-	if (InteractableToAssign == CurrentInteractable) return;
+	if (CurrentInteractableActor == nullptr) return;
 
-	ClearInteractable();
-	CurrentInteractable = InteractableToAssign;	
-	OnInteractableFound.Broadcast(CurrentInteractable->GetInteractableName());
+	OnInteractableFound.Broadcast(InteractionHandler->GetInteractableName());
 }
 
 void APlayerCharacter::ClearInteractable()
 {
-	if (CurrentInteractable == nullptr) return;
+	if (CurrentInteractableActor == nullptr) return;
 
-	OnInteractableGone.Broadcast(CurrentInteractable->GetInteractableName());
-	CurrentInteractable = nullptr;
+	OnInteractableGone.Broadcast(InteractionHandler->GetInteractableName());
+	InteractionHandler->ClearInteractable();
+	CurrentInteractableActor = nullptr;
 }
 
 void APlayerCharacter::FaceInteractable()
 {
-	if (CurrentInteractable == nullptr) return;
+	if (CurrentInteractableActor == nullptr) return;
 
-	FVector TargetLook = Cast<AActor>(CurrentInteractable)->GetActorLocation() - GetActorLocation();
+	FVector TargetLook = CurrentInteractableActor->GetActorLocation() - GetActorLocation();
 
 	FRotator LookRotation = FRotator::ZeroRotator;
 	LookRotation.Yaw = TargetLook.Rotation().Yaw;
@@ -328,11 +325,18 @@ void APlayerCharacter::FaceInteractable()
 	SetActorRotation(LookRotation);
 }
 
+void APlayerCharacter::StopInteraction()
+{
+	ClearInteractable();
+	PlayerControlState = EPlayerControlStates::EPC_OnCharacter;
+}
+
 void APlayerCharacter::OnItemTransferSuccess()
 {
 	//Display item retrieved message
 	//finishinginteraction()
-	PlayerControlState = EPlayerControlStates::EPC_OnCharacter;
+
+
 }
 
 void APlayerCharacter::OnItemTransferFailed()

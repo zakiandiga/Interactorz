@@ -21,13 +21,17 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Interactable")
 	bool CanInteract(const AActor* InteractingActor) override;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Interactable")
 	void Interact(AActor* InteractingActor) override;
 
+	UFUNCTION(BlueprintCallable, Category = "Interactable")
 	FString GetInteractableName() override;
+
+	UFUNCTION(BlueprintCallable, Category = "Interactable")
+	FOnInteractionFinished& OnInteractionFinished() override { return OnInteractionFinishedDelegate; }
 
 private:
 	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = "true"), Category = "Item Data")
@@ -82,5 +86,7 @@ public:
 	
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE int32 GetHealthPoint() const { return HealthPoint; }
+
+	
 
 };

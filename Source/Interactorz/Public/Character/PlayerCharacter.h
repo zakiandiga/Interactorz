@@ -12,6 +12,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class USphereComponent;
 class UInventory;
+class UInteractionHandler;
 class IInteractable;
 class UWIPlayerOverlay;
 class UAnimMontage;
@@ -79,7 +80,11 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Player Interaction")
 	EPlayerControlStates PlayerControlState = EPlayerControlStates::EPC_OnCharacter;
 
-	IInteractable* CurrentInteractable = nullptr;
+	UPROPERTY(VisibleAnywhere, Category = "Player Interaction")
+	UInteractionHandler* InteractionHandler = nullptr;
+
+	UPROPERTY()
+	AActor* CurrentInteractableActor = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "Player Interaction")
 	bool bIsLineTracingForInteractable = false;
@@ -94,9 +99,12 @@ private:
 
 	void ToggleMenu();
 	void TracingForInteractable();
-	void AssignInteractable(IInteractable* InteractableToAssign);
+	void AssignInteractable(AActor* InteractableToAssign);
 	void ClearInteractable();
 	void FaceInteractable();
+
+	UFUNCTION()
+	void StopInteraction();
 
 	void MoveForward(float Value);
 	void MoveSide(float Value);
@@ -112,10 +120,13 @@ private:
 public:
 
 	UFUNCTION(BlueprintPure, Category = "Inventory")
-	FORCEINLINE UInventory* GetInventory() const { return PlayerInventory; }
+	UInventory* GetInventory() const override { return PlayerInventory; }
 
-	virtual void OnItemTransferSuccess() override;
-	virtual void OnItemTransferFailed() override;
+	UFUNCTION()
+	void OnItemTransferSuccess() override;
+
+	UFUNCTION()
+	void OnItemTransferFailed() override;
 
 	UFUNCTION(BlueprintCallable, Category = "MoveStates")
 	void SetControlToPlayerCharacter();
