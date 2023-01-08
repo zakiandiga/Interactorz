@@ -3,9 +3,9 @@
 
 #include "UI/InGameHUD.h"
 #include "Components/WidgetSwitcher.h"
-#include "UI/PlayerOverlay.h"
-#include "UI/InGameMenu.h"
-#include "PlayerCharacter.h"
+#include "UI/WIPlayerOverlay.h"
+#include "UI/WIInGameMenu.h"
+#include "Character/PlayerCharacter.h"
 
 void AInGameHUD::BeginPlay()
 {
@@ -25,17 +25,18 @@ void AInGameHUD::BeginPlay()
 
 void AInGameHUD::CreateMainUI()
 {
-	PlayerOverlay = CreateWidget<UPlayerOverlay>(PlayerController, PlayerOverlayClass);
+	PlayerOverlay = CreateWidget<UWIPlayerOverlay>(PlayerController, PlayerOverlayClass);
 	PlayerOverlay->AddToViewport();
 	PlayerOverlay->SetInteractableInfoPanelHidden(FString());
 
-	InGameMenu = CreateWidget<UInGameMenu>(PlayerController, InGameMenuClass);
+	InGameMenu = CreateWidget<UWIInGameMenu>(PlayerController, InGameMenuClass);
 	InGameMenu->AddToViewport();
 	InGameMenu->SetMainPanelHidden();
 
-	PlayerController->SetShowMouseCursor(false); //Should be set somewhere else
+	PlayerController->SetInputMode(FInputModeGameOnly());
+	PlayerController->SetShowMouseCursor(false); //Should be set somewhere else?	
 
-	InGameMenu->SetOwnerInventory(HUDOwner->GetActorInventory());
+	InGameMenu->SetOwnerInventory(HUDOwner->GetInventory());
 	InGameMenu->OnMenuCreated.Broadcast(InGameMenu);
 }
 
@@ -63,13 +64,20 @@ void AInGameHUD::OpenMenu(bool bIsOpening)
 	
 	if (!bIsOpening)
 	{
-		//PlayerController->SetInputMode(FInputModeUIOnly());
+		//PlayerController->SetInputMode(FInputModeGameOnly());
 		PlayerController->SetShowMouseCursor(false);
 		InGameMenu->SetMainPanelHidden();
+		HUDOwner->SetControlToPlayerCharacter();
 		return;
 	}
 
-	//PlayerController->SetInputMode(FInputModeGameOnly());
-	//PlayerController->SetShowMouseCursor(true);
+	//PlayerController->SetInputMode(FInputModeUIOnly());
+	PlayerController->SetShowMouseCursor(true);
 	InGameMenu->SetMainPanelVisible();
 }
+
+void AInGameHUD::OpenMenuFromBP(bool bIsOpeningMenu)
+{
+	OpenMenu(bIsOpeningMenu);
+}
+

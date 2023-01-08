@@ -6,8 +6,8 @@
 #include "GameFramework/HUD.h"
 #include "InGameHUD.generated.h"
 
-class UPlayerOverlay;
-class UInGameMenu;
+class UWIPlayerOverlay;
+class UWIInGameMenu;
 class APlayerCharacter;
 class UUserWidget;
 
@@ -21,10 +21,10 @@ protected:
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<UInGameMenu> InGameMenuClass;
+	TSubclassOf<UWIInGameMenu> InGameMenuClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<UPlayerOverlay> PlayerOverlayClass;
+	TSubclassOf<UWIPlayerOverlay> PlayerOverlayClass;
 
 	UPROPERTY(VisibleAnywhere, Category = "UI")
 	APlayerCharacter* HUDOwner;
@@ -33,10 +33,10 @@ private:
 	APlayerController* PlayerController;
 
 	UPROPERTY()
-	UPlayerOverlay* PlayerOverlay;
+	UWIPlayerOverlay* PlayerOverlay;
 
 	UPROPERTY()
-	UInGameMenu* InGameMenu;
+	UWIInGameMenu* InGameMenu;
 
 	void CreateMainUI();
 
@@ -51,5 +51,7 @@ private:
 	UFUNCTION()
 	void OpenMenu(bool bIsOpening);
 
-	
+public:
+	UFUNCTION(BlueprintCallable, Category = "UI | Navigation")
+	void OpenMenuFromBP(bool bIsOpeningMenu);
 };

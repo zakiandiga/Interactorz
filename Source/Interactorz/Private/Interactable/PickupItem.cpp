@@ -1,9 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Interactable/PickupItem.h"
-#include "Components/SphereComponent.h"
-#include "DA_ItemData.h"
+#include "DAItemData.h"
 #include "Inventory.h"
 #include "Interfaces/InventoryOwner.h"
 
@@ -11,7 +9,7 @@ APickupItem::APickupItem()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	ItemData = CreateDefaultSubobject<UDA_ItemData>(TEXT("Item Info"));
+	ItemData = CreateDefaultSubobject<UDAItemData>(TEXT("Item Info"));
 	ItemSprite = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Item Sprite"));
 	
 	SetRootComponent(ItemSprite);
@@ -29,23 +27,27 @@ bool APickupItem::CanInteract(const AActor* InteractingActor)
 void APickupItem::Interact(AActor* InteractingActor)
 {	
 	IInventoryOwner* InventoryOwner = Cast<IInventoryOwner>(InteractingActor);
-	UInventory* InteractingInventory = InventoryOwner->GetActorInventory();
+	if (InventoryOwner == nullptr) return;
+
+	UInventory* InteractingInventory = InventoryOwner->GetInventory();
 	if (InteractingInventory == nullptr) return;
 	
 	if (InteractingInventory->CheckSpaceAvailable() < ItemQuantity)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Your inventory is full!"));
 		InventoryOwner->OnItemTransferFailed();
+		OnInteractionFinished().ExecuteIfBound();
 		return;
 	}
 
 	InteractingInventory->ProcessItem(EItemProcessType::EIP_Retrieve, ItemData, ItemQuantity);
 	UE_LOG(LogTemp, Warning, TEXT("%d of %s added to the %s"), ItemQuantity, *ItemData->ItemData.Name, *InteractingInventory->GetOwner()->GetActorNameOrLabel());
 	InventoryOwner->OnItemTransferSuccess();
+	OnInteractionFinished().ExecuteIfBound();
 	Destroy();
 }
 
-void APickupItem::SpawnInitialize(UDA_ItemData* ItemDataToSet, int32 QuantityToSet)
+void APickupItem::SpawnInitialize(UDAItemData* ItemDataToSet, int32 QuantityToSet)
 {
 	if (ItemDataToSet == nullptr) return;
 

@@ -21,14 +21,17 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;	
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Interactable")
 	bool CanInteract(const AActor* InteractingActor) override;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Interactable")
 	void Interact(AActor* InteractingActor) override;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Interactable")
 	FString GetInteractableName() override;
+
+	UFUNCTION(BlueprintCallable, Category = "Interactable")
+	FOnInteractionFinished& OnInteractionFinished() override { return OnInteractionFinishedDelegate; }
 
 private:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Components")

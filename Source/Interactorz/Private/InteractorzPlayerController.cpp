@@ -2,7 +2,7 @@
 
 
 #include "InteractorzPlayerController.h"
-#include "PlayerCharacter.h"
+#include "Character/PlayerCharacter.h"
 #include "GameFramework/PlayerController.h"
 
 AInteractorzPlayerController::AInteractorzPlayerController()
@@ -16,6 +16,8 @@ void AInteractorzPlayerController::BeginPlay()
 
 	PossessedPawn = Cast<APlayerCharacter>(GetPawn());
 
+	FString Message = GetName();
+	UE_LOG(LogTemp, Warning, TEXT("PlayerController: %s"), *Message);
 	//set mouse cursor state according to player opening/closing menu
 }
 
@@ -23,7 +25,6 @@ void AInteractorzPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	
 
 	//InputComponent->BindAxis("UIMoveUp", this, &AInteractorzPlayerController::UINavigateVertical);
 	//InputComponent->BindAxis("UIMoveRight", this, &AInteractorzPlayerController::UINavigateHorizontal);
