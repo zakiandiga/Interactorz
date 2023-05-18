@@ -13,7 +13,7 @@ void AInGameHUD::BeginPlay()
 
 	PlayerController = GetWorld()->GetFirstPlayerController();
 	
-	if (PlayerController == nullptr || PlayerOverlayClass == nullptr) return;
+	if (PlayerController == nullptr || PlayerOverlayClass == nullptr || StorageMenuClass == nullptr) return;
 
 	HUDOwner = Cast<APlayerCharacter>(PlayerController->GetPawn());
 	
@@ -33,6 +33,10 @@ void AInGameHUD::CreateMainUI()
 	InGameMenu->AddToViewport();
 	InGameMenu->SetMainPanelHidden();
 
+	StorageMenu = CreateWidget<UWIInGameMenu>(PlayerController, StorageMenuClass);
+	StorageMenu->AddToViewport();
+	StorageMenu->SetMainPanelHidden();
+
 	PlayerController->SetInputMode(FInputModeGameOnly());
 	PlayerController->SetShowMouseCursor(false); //Should be set somewhere else?	
 
@@ -42,20 +46,20 @@ void AInGameHUD::CreateMainUI()
 
 void AInGameHUD::BindPlayerActions()
 {
-	HUDOwner->OnInteractableFound.AddDynamic(this, &AInGameHUD::DisplayInteractableInfo);
+	HUDOwner->OnInteractableFound.AddDynamic(this, &AInGameHUD::DisplayInteractableName);
 	HUDOwner->OnInteractableGone.AddDynamic(this, &AInGameHUD::HideInteractableInfo);
 	HUDOwner->OnPlayerOpeningMenu.AddDynamic(this, &AInGameHUD::OpenMenu);
 }
 
-void AInGameHUD::DisplayInteractableInfo(FString InteractableName)
+void AInGameHUD::DisplayInteractableName(FName InteractableName)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Displaying interactrable: %s"), *InteractableName);
-	PlayerOverlay->SetInteractableInfoPanelVisible(InteractableName);
+	PlayerOverlay->SetInteractableInfoPanelVisible(InteractableName.ToString());
 }
 
-void AInGameHUD::HideInteractableInfo(FString InteractableName)
+void AInGameHUD::HideInteractableInfo()
 {
-	PlayerOverlay->SetInteractableInfoPanelHidden(InteractableName);
+	PlayerOverlay->SetInteractableInfoPanelHidden(FString());
 }
 
 void AInGameHUD::OpenMenu(bool bIsOpening)
@@ -79,5 +83,21 @@ void AInGameHUD::OpenMenu(bool bIsOpening)
 void AInGameHUD::OpenMenuFromBP(bool bIsOpeningMenu)
 {
 	OpenMenu(bIsOpeningMenu);
+}
+
+void AInGameHUD::OpenStorageMenu(bool IsOpening)
+{
+	if (PlayerController == nullptr) return;
+
+	if (!IsOpening)
+	{
+		PlayerController->SetShowMouseCursor(false);
+		StorageMenu->SetMainPanelHidden();
+		HUDOwner->SetControlToPlayerCharacter();
+		return;
+	}
+
+	PlayerController->SetShowMouseCursor(true);
+	StorageMenu->SetMainPanelVisible();
 }
 

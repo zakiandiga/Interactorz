@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "Inventory.generated.h"
 
+class UDAItemData;
+
 UENUM(Blueprintable)
 enum class EItemProcessType : uint8
 {
@@ -15,7 +17,22 @@ enum class EItemProcessType : uint8
 	EIP_Retrieve UMETA(DisplayName = "Retrieve")
 };
 
-class UDAItemData;
+USTRUCT(BlueprintType)
+struct FInventoryItem
+{
+	GENERATED_USTRUCT_BODY()
+
+	UDAItemData* Item;
+	int32 ItemQuantity;
+
+	UDAItemData* SetItem(UDAItemData* ItemToSet) { Item = ItemToSet; }
+	int32 SetItemQuantity(int32 QuantityToSet) { ItemQuantity = QuantityToSet; }
+
+};
+
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnItemProcessed, FString, ItemName, int32, ItemQuantity);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryIsFull);
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class INTERACTORZ_API UInventory : public UActorComponent
 {
@@ -25,8 +42,12 @@ public:
 	UInventory();
 
 private:
+
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Inventory Properties")
 	TMap<UDAItemData*, int32> ActiveInventory = TMap<UDAItemData*, int32>();
+
+	//UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "Inventory Properties")
+	//TSet<FInventoryItem> InventoryItems = TSet<FInventoryItem>();
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Inventory Properties")
 	int32 MaxInventorySpace = 20;
@@ -52,12 +73,15 @@ private:
 	UFUNCTION(BlueprintCallable, meta = (AllowPrivateAccess = "true"), Category = "Inventory")
 	void UseItem(UDAItemData* ItemToUse, int32 QuantityToUse);
 
+	UFUNCTION()
+	void SpawnItemToWorld(UDAItemData* ItemToDrop, const int32 Quantity);
+
 public:
 	UFUNCTION(BlueprintCallable)
 	void ProcessItem(EItemProcessType ProcessType, UDAItemData* ItemToProcess, int32 QuantityToProcess);
 	
 	UFUNCTION(BlueprintPure, Category = "Inventory")
-	FORCEINLINE TMap<UDAItemData*, int32> GetActiveInventory() const { return ActiveInventory; }
+	TMap<UDAItemData*, int32> GetActiveInventory() const { return ActiveInventory; }
 
 	UFUNCTION(BlueprintPure)
 	bool CheckItemAvailable(UDAItemData* ItemToCheck) const;
@@ -68,5 +92,18 @@ public:
 	UFUNCTION(BlueprintPure)
 	int32 CheckItemQuantityInInventory(UDAItemData* ItemToCheck) const;
 
+	UPROPERTY(EditAnywhere, BlueprintAssignable, Category = "Inventory Update")
+	FOnItemProcessed OnItemRetrieved;
 
+	UPROPERTY(BlueprintAssignable, Category = "Inventory Update")
+	FOnItemProcessed OnItemRemoved;
+
+	UPROPERTY(BlueprintAssignable, Category = "Inventory Update")
+	FOnItemProcessed OnItemUsed;
+
+	UPROPERTY(BlueprintAssignable, Category = "Inventory Update")
+	FOnItemProcessed OnItemDropped;
+
+	UPROPERTY(BlueprintAssignable, Category = "Inventory Update")
+	FOnInventoryIsFull OnInventoryIsFull;
 };

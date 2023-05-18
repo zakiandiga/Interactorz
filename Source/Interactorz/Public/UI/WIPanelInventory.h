@@ -20,12 +20,7 @@ class INTERACTORZ_API UWIPanelInventory : public UUserWidget, public IIUISwitche
 {
 	GENERATED_BODY()
 	
-	//add button DROP and USE in BP
-	//OnDROPClicked: OwnerInventory->ProcessItem(EItemProcessType::EIP_Drop, ItemToProcess->GetDataContainer().Item, 1);
-	//OnUSEClicked: OwnerInventory->ProcessItem(EItemProcessType::EIP_Consume, ItemToProcess->GetDataContainer().Item, 1);
-	//These will replace OnListViewClicked(UObject* ClickedObject)
-
-private:
+protected:
 	bool bIsCurrentlyActive = false;
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "UI | Inventory")
@@ -33,23 +28,24 @@ private:
 
 	UPROPERTY()
 	UObject* SelectedItemObject = nullptr;
-	
+
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "UI | Inventory")
 	UInventory* OwnerInventory;
 
-	void NativeConstruct() override;
-	
-	UFUNCTION()
-	void AssignOwnerInventory(UWIInGameMenu* Root);
-
 	bool ShouldCycleTargetIndex(int32 TargetIndex);
-	int32 CycleNextIndex(int32 TargetIndex);	
+
+	int32 CycleNextIndex(int32 TargetIndex);
+
+	void NativeConstruct() override;
 
 	UFUNCTION()
 	void DisplayInventoryList();
 
 	UFUNCTION()
 	void ClearInventoryList();
+
+	UFUNCTION()
+	void AssignOwnerInventory(UUserWidget* Root);
 
 public:
 	
@@ -73,6 +69,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "UI | Inventory")
 	void SetOwnerInventory(UInventory* InventoryToSet) { OwnerInventory = InventoryToSet; }
+
+	UFUNCTION(BlueprintCallable, Category = "UI | Inventory")
+	UInventory* GetOwnerInventory() { return OwnerInventory; }
 
 	UFUNCTION(BlueprintPure, Category = "UI | Navigation")
 	int32 GetSelectedItemIndex() const { return SelectedItemIndex; }

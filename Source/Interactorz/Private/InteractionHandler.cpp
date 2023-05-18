@@ -32,12 +32,13 @@ bool UInteractionHandler::TrySetInteractable(AActor* ActorToInteract)
 	return CurrentInteractable == nullptr ? false : true;
 }
 
-FString UInteractionHandler::GetInteractableName()
+FName UInteractionHandler::GetInteractableName()
 {
+	/*
 	if (CurrentInteractable == nullptr)
 	{
 		return FString("ERROR: Interactable name not assigned!");
 	}
-
-	return CurrentInteractable->GetInteractableName();
+	*/
+	return FName(CurrentInteractable->GetInteractableName());
 }

@@ -39,7 +39,7 @@ public:
 	FORCEINLINE void ClearInteractable() { CurrentInteractable = nullptr; }
 
 	UFUNCTION(BlueprintPure, Category = "Interaction")
-	FString GetInteractableName();
+	FName GetInteractableName();
 	
 	UPROPERTY(BlueprintAssignable, Category = "Interaction")
 	FOnInteractionEnds OnInteractionEnds;

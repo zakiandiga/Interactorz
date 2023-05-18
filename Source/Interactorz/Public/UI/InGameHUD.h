@@ -26,6 +26,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UWIPlayerOverlay> PlayerOverlayClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UWIInGameMenu> StorageMenuClass;
+
 	UPROPERTY(VisibleAnywhere, Category = "UI")
 	APlayerCharacter* HUDOwner;
 
@@ -38,15 +41,18 @@ private:
 	UPROPERTY()
 	UWIInGameMenu* InGameMenu;
 
+	UPROPERTY()
+	UWIInGameMenu* StorageMenu;
+
 	void CreateMainUI();
 
 	void BindPlayerActions();
 	
 	UFUNCTION()
-	void DisplayInteractableInfo(FString InteractableName);
+	void DisplayInteractableName(FName InteractableName);
 
 	UFUNCTION()
-	void HideInteractableInfo(FString InteractableName);
+	void HideInteractableInfo();
 
 	UFUNCTION()
 	void OpenMenu(bool bIsOpening);
@@ -54,4 +60,9 @@ private:
 public:
 	UFUNCTION(BlueprintCallable, Category = "UI | Navigation")
 	void OpenMenuFromBP(bool bIsOpeningMenu);
+
+	UFUNCTION(BlueprintCallable)
+	void OpenStorageMenu(bool IsOpening);
+
+	
 };

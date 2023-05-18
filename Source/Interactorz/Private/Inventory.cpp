@@ -26,12 +26,14 @@ void UInventory::AddToInventory(UDAItemData* ItemToAdd, int32 QuantityToAdd)
 	if (CheckSpaceAvailable() < QuantityToAdd)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("INVENTORY IS FULL"));
+		OnInventoryIsFull.Broadcast();
 		return;
 	}
 
 	int32 newQuantity = CheckItemQuantityInInventory(ItemToAdd) + QuantityToAdd;
 	ActiveInventory.Emplace(ItemToAdd, newQuantity);
 	UpdateInventorySpace();
+	OnItemRetrieved.Broadcast(ItemToAdd->ItemData.Name, QuantityToAdd);
 }
 
 void UInventory::RemoveFromInventory(UDAItemData* ItemToRemove, int32 QuantityToRemove)
@@ -45,18 +47,24 @@ void UInventory::RemoveFromInventory(UDAItemData* ItemToRemove, int32 QuantityTo
 	
 	ActiveInventory.FindAndRemoveChecked(ItemToRemove);	
 	UpdateInventorySpace();
+	//OnItemRemoved.Broadcast(Item)
 }
 
 void UInventory::DropItem(UDAItemData* ItemToDrop, int32 QuantityToDrop)
+{
+	SpawnItemToWorld(ItemToDrop, QuantityToDrop);
+	RemoveFromInventory(ItemToDrop, QuantityToDrop);
+	OnItemDropped.Broadcast(ItemToDrop->ItemData.Name, QuantityToDrop);
+}
+
+void UInventory::SpawnItemToWorld(UDAItemData* ItemToDrop, const int32 Quantity)
 {
 	float RandomYaw = FMath::FRandRange(0.f, 360.f);
 	FRotator SpawnRotation = GetOwner()->GetActorRotation();
 	SpawnRotation.Yaw = RandomYaw;
 	FVector SpawnLocation = GetOwner()->GetActorLocation() + DropLocationOffset;
 	APickupItem* ItemToSpawn = GetWorld()->SpawnActor<APickupItem>(SpawnLocation, SpawnRotation);
-
-	ItemToSpawn->SpawnInitialize(ItemToDrop, QuantityToDrop);
-	RemoveFromInventory(ItemToDrop, QuantityToDrop);
+	ItemToSpawn->SpawnInitialize(ItemToDrop, Quantity);
 }
 
 void UInventory::UseItem(UDAItemData* ItemToUse, int32 QuantityToUse)
@@ -70,7 +78,8 @@ void UInventory::UseItem(UDAItemData* ItemToUse, int32 QuantityToUse)
 	}
 
 	ItemAction->UseItem(ItemToUse, GetOwner());
-	RemoveFromInventory(ItemToUse, QuantityToUse);	
+	RemoveFromInventory(ItemToUse, QuantityToUse);
+	OnItemUsed.Broadcast(ItemToUse->ItemData.Name, QuantityToUse);
 }
 
 void UInventory::ProcessItem(EItemProcessType ProcessType, UDAItemData* ItemToProcess, int32 QuantityToProcess)

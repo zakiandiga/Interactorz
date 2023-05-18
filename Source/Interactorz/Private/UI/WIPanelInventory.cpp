@@ -22,9 +22,9 @@ void UWIPanelInventory::NativeConstruct()
 	DescriptionText->SetText(FText());
 }
 
-void UWIPanelInventory::AssignOwnerInventory(UWIInGameMenu* Root)
+void UWIPanelInventory::AssignOwnerInventory(UUserWidget* Root)
 {
-	OwnerInventory = Root->GetOwnerInventory();
+	OwnerInventory = Cast<UWIInGameMenu>(Root)->GetOwnerInventory();
 }
 
 bool UWIPanelInventory::ShouldCycleTargetIndex(int32 TargetIndex)
