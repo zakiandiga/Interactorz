@@ -10,6 +10,9 @@
 
 class UInventory;
 class UDAItemData;
+class AInGameHUD;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnInteractedWithPlayer, UInventory*, StorageInventory, UInventory*, PlayerInventory);
 UCLASS()
 class INTERACTORZ_API AStorageActor : public AActor, public IInteractable, public IInventoryOwner
 {
@@ -20,8 +23,11 @@ public:
 	AStorageActor();
 
 private:
+
 	UPROPERTY(EditAnywhere, meta = (AllowAPrivateAccess = "true"), Category = "Storage Components")
 	UStaticMeshComponent* StorageMesh;
+
+	AInGameHUD* InGameHUD;
 
 	UPROPERTY(EditAnywhere, meta = (AllowAPrivateAccess = "true"), Category = "Storage Components")
 	UInventory* StorageInventory;
@@ -31,7 +37,7 @@ private:
 	UPROPERTY(EditAnywhere, meta = (AllowAPrivateAccess = "true"), Category = "Storage Components")
 	UDAItemData* DEBUGITEMTOGIVE;
 	UPROPERTY(EditAnywhere, meta = (AllowAPrivateAccess = "true"), Category = "Storage Components")
-		int32 DEBUGITEMQUANTITY;
+	int32 DEBUGITEMQUANTITY;
 
 protected:
 
@@ -68,5 +74,7 @@ public:
 	virtual void OnItemTransferSuccess() override;
 
 	virtual void OnItemTransferFailed() override;
+
+	FOnInteractedWithPlayer OnInteractWithPlayer;
 
 };

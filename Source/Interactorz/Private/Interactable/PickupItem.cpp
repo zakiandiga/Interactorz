@@ -34,7 +34,7 @@ void APickupItem::Interact(AActor* InteractingActor)
 	
 	if (InteractingInventory->CheckSpaceAvailable() < ItemQuantity)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Your inventory is full!"));
+		InteractingInventory->ProcessItem(EItemProcessType::EIP_Retrieve, ItemData, ItemQuantity);
 		InventoryOwner->OnItemTransferFailed();
 		OnInteractionFinished().ExecuteIfBound();
 		return;

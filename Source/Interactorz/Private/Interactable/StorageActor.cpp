@@ -3,6 +3,7 @@
 
 #include "Interactable/StorageActor.h"
 #include "Inventory.h"
+#include "UI/InGameHUD.h"
 
 
 AStorageActor::AStorageActor()
@@ -17,10 +18,9 @@ AStorageActor::AStorageActor()
 void AStorageActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	InGameHUD = Cast<AInGameHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());	
 }
-
-
 
 void AStorageActor::Tick(float DeltaTime)
 {
@@ -48,8 +48,13 @@ void AStorageActor::Interact(AActor* InteractingActor)
 		//finish interaction right away, error, not a storage type
 		return;
 	}
-
-	TransferToInteractor(DEBUGITEMTOGIVE, DEBUGITEMQUANTITY);
+	
+	if (InGameHUD == nullptr) return;
+	
+	InGameHUD->OpenStorageMenu(true);
+	//bind to on storage menu closed
+	// on closed, ending interaction, back to player
+	//TransferToInteractor(DEBUGITEMTOGIVE, DEBUGITEMQUANTITY);
 }
 
 void AStorageActor::TransferToInteractor(UDAItemData* ItemToGive, int32 QuantityToGive)

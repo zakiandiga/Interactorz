@@ -10,15 +10,18 @@
 	"DocsURL": "",
 	"MarketplaceURL": "",
 	"SupportURL": "",
+	"EngineVersion": "5.0.0",
 	"CanContainContent": true,
 	"IsBetaVersion": true,
-	"IsExperimentalVersion": false,
-	"Installed": false,
+	"Installed": true,
 	"Modules": [
 		{
 			"Name": "ZAQoLInteraction",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"PlatformAllowList": [
+				"Win64"
+			]
 		}
 	]
 }

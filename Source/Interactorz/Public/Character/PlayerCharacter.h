@@ -16,7 +16,9 @@ class UInteractionHandler;
 class IInteractable;
 class UWIPlayerOverlay;
 class UAnimMontage;
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableTraced, FString, InteractableName);
+class UZAQInteractionHandler;
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractableTraced, FName, InteractableName);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractableGone);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerOpeningMenu, bool, bIsOpening); //false = closing
 UCLASS()
 class INTERACTORZ_API APlayerCharacter : public ACharacter, public IInventoryOwner
@@ -83,6 +85,10 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Player Interaction")
 	UInteractionHandler* InteractionHandler = nullptr;
 
+	//TESTING
+	UPROPERTY(VisibleAnywhere, Category = "Player Interaction")
+	UZAQInteractionHandler* ZInteractionHandler = nullptr;
+
 	UPROPERTY()
 	AActor* CurrentInteractableActor = nullptr;
 
@@ -147,7 +153,7 @@ public:
 	FOnInteractableTraced OnInteractableFound;
 
 	UPROPERTY(BlueprintAssignable)
-	FOnInteractableTraced OnInteractableGone;
+	FOnInteractableGone OnInteractableGone;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnPlayerOpeningMenu OnPlayerOpeningMenu;

@@ -12,7 +12,7 @@ class UInventory;
 class UInventoryListEntry;
 class UWIWidgetSwitcher;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMenuCreated, UWIInGameMenu*, Root);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMenuCreated, UUserWidget*, Root);
 UCLASS()
 class INTERACTORZ_API UWIInGameMenu : public UUserWidget
 {

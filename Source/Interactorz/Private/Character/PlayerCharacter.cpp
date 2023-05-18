@@ -13,6 +13,7 @@
 #include "Inventory.h"
 #include "DAItemData.h"
 #include "InteractionHandler.h"
+#include "ZAQoLInteraction/Public/Components/Interaction/ZAQInteractionHandler.h"
 #include "Animation/AnimMontage.h"
 #include "DebugHelpers/DebugMacros.h"
 
@@ -30,6 +31,7 @@ APlayerCharacter::APlayerCharacter()
 	PlayerOverlay = CreateDefaultSubobject<UWIPlayerOverlay>(TEXT("Player Overlay"));
 	InteractableCollider = CreateDefaultSubobject<USphereComponent>(TEXT("Interactable Collider"));
 	InteractionHandler = CreateDefaultSubobject<UInteractionHandler>(TEXT("Interaction Handler"));
+	ZInteractionHandler = CreateDefaultSubobject<UZAQInteractionHandler>(TEXT("Interaction Handler Comp"));
 
 	CameraBoom->SetupAttachment(GetRootComponent());
 	PlayerCamera->SetupAttachment(CameraBoom);
@@ -285,7 +287,7 @@ void APlayerCharacter::TracingForInteractable()
 
 	AActor* HitActor = CurrentHitResult.GetActor();
 
-	if (CurrentInteractableActor != nullptr && (HitActor != CurrentInteractableActor || !InteractionHandler->TrySetInteractable(HitActor)))
+	if (!InteractionHandler->TrySetInteractable(HitActor) || (CurrentInteractableActor != nullptr && CurrentInteractableActor != HitActor))
 	{
 		ClearInteractable();		
 		return;
@@ -297,7 +299,7 @@ void APlayerCharacter::TracingForInteractable()
 
 void APlayerCharacter::AssignInteractable(AActor* InteractableToAssign)
 {
-	if (CurrentInteractableActor == nullptr) return;
+	if (InteractableToAssign == nullptr) return;
 
 	OnInteractableFound.Broadcast(InteractionHandler->GetInteractableName());
 }
@@ -306,7 +308,7 @@ void APlayerCharacter::ClearInteractable()
 {
 	if (CurrentInteractableActor == nullptr) return;
 
-	OnInteractableGone.Broadcast(InteractionHandler->GetInteractableName());
+	OnInteractableGone.Broadcast();
 	InteractionHandler->ClearInteractable();
 	CurrentInteractableActor = nullptr;
 }

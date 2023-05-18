@@ -8,10 +8,37 @@
 
 class UCanvasPanel;
 class UTextBlock;
+class UInventory;
 UCLASS()
 class INTERACTORZ_API UWIPlayerOverlay : public UUserWidget
 {
 	GENERATED_BODY()	
+
+private:
+
+	UPROPERTY(meta = (BindWidget))
+	UCanvasPanel* InteractableInfoPanel;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* InteractableInfoText;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Inventory")
+	UInventory* PlayerInventory;
+
+	UFUNCTION()
+	void ItemRetrievedDelegate(FString Item, int32 Quantity);
+
+	UFUNCTION()
+	void ItemRemovedDelegate(FString Item, int32 Quantity);
+
+	UFUNCTION()
+	void ItemDroppedDelegate(FString Item, int32 Quantity);
+
+	UFUNCTION()
+	void ItemUsedDelegate(FString Item, int32 Quantity);
+
+protected:
+	void NativeConstruct() override;
 
 public:
 
@@ -21,11 +48,19 @@ public:
 	UFUNCTION()
 	void SetInteractableInfoPanelHidden(FString InteractableNameToRemove);
 
-private:
+	UFUNCTION(BlueprintNativeEvent, Category = "Inventory")
+	void ItemRetrieved(const FString& ItemName, int32 Quantity);
+	//void ItemRetrieved_Implementation(FString& ItemName, int32& Quantity);
+		
+	UFUNCTION(BlueprintNativeEvent, Category = "Inventory")
+	void ItemRemoved(const FString& ItemName, int32 Quantity);
 
-	UPROPERTY(meta = (BindWidget))
-	UCanvasPanel* InteractableInfoPanel;
+	UFUNCTION(BlueprintNativeEvent, Category = "Inventory")
+	void ItemDropped(const FString& ItemName, int32 Quantity);
 
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* InteractableInfoText;
+	UFUNCTION(BlueprintNativeEvent, Category = "Inventory")
+	void ItemUsed(const FString& ItemName, int32 Quantity);	
+
+	UFUNCTION(BlueprintNativeEvent, Category = "Inventory")
+	void InventoryIsFull();
 };
