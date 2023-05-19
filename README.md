@@ -1,10 +1,10 @@
 # Interactorz
 
-This repository is used for testing and developing the plugin
+This repository is used for prototyping the plugin system I am working on.
 
-I made the plugin only repo that focus solely on the plugin source. If you want to check on the plugin only, please go to the link below
+If you'd like to check the real plugin development repository, please go to the link below
 <br>
 + [InteractorzQoL](https://github.com/zakiandiga/InteractorzQoL)
 
 
-Interactorz is a standalone project to prototype features for my standalone Unreal Engine 5 plugins. It is a basic interaction mechanic that's common in most single player action/adventure RPGs, featuring interaction system with non-player actors, inventory system, item authoring tools, and many more to come. It is planned to be implementable in both C++ and Blueprint.
+Interactorz is a project to prototype features for my Unreal Engine 5 plugins. It is a basic interaction mechanic that's common in most single player action/adventure RPGs, featuring interaction system with non-player actors, inventory system, item authoring tools, and many more to come. It is planned to be implementable in both C++ and Blueprint.
